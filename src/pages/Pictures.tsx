@@ -1,8 +1,7 @@
 import CurvedTextCircle from "../components/CurvedTextCircle";
 
 const Pictures = () => {
-  const text = "Bending Text Around a Circle";
-   const words = text.split(' ');
+
   return (
     <div className="w-full max-w-screen relative h-[150vh]">
       {/* Left Image */}
