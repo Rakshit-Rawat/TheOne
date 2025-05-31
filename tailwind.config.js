@@ -7,7 +7,6 @@ export default {
         tablet: "900px",
         mobile: "575px",
         tablet_trending: "990px",
-        
       },
       fontFamily: {
         barlow: ["Barlow Condensed", "sans-serif"],
@@ -18,6 +17,10 @@ export default {
       },
       backgroundImage: {
         hero: "url('https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_slide1_bg.jpg?v=1702698901')",
+      },
+      rotate: {
+        "0%": { transform: "rotate(0deg)" },
+        "360%": { transform: "rotate(360deg)" },
       },
     },
   },
