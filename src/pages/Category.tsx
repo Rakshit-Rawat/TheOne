@@ -1,5 +1,7 @@
+import { useState, useRef, useEffect } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
+import { motion, useInView } from "motion/react";
 
 const Category = () => {
   const slides = [
@@ -7,12 +9,7 @@ const Category = () => {
       id: 1,
       type: "category",
       title: "TOP SUMMER\nCYCLING PICKS.",
-      categories: [
-        "BLADDER",
-        "TSHIRT", 
-        "GEARS",
-        "ACCESSORIES"
-      ],
+      categories: ["BLADDER", "TSHIRT", "GEARS", "ACCESSORIES"],
       bgColor: "bg-lime-400",
       textColor: "text-black",
     },
@@ -27,7 +24,7 @@ const Category = () => {
     },
     {
       id: 3,
-      type: "image", 
+      type: "image",
       title: "RUNNING",
       image:
         "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -37,7 +34,7 @@ const Category = () => {
     {
       id: 4,
       type: "image",
-      title: "CYCLING", 
+      title: "CYCLING",
       image:
         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       bgColor: "bg-black/40",
@@ -53,19 +50,30 @@ const Category = () => {
     loop: true,
     drag: true,
   });
+  // const [isInView, setIsInView] = useState(false);
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const sectionInView = useInView(sectionRef, { once: false ,  margin: "0px 100px -600px 0px"});
+
+
 
   return (
-    <section className="w-full overflow-hidden bg-gray-50 py-10">
+    <motion.section
+      ref={sectionRef}
+      style={{ height: "100vh"}}
+      initial={{ x: "100%" }} // Start off-screen at 200%
+      animate={{ x: sectionInView ? "0%" : "100%" }} // Animate when in view
+      transition={{
+        type: "spring",
+        stiffness: 120,
+        damping: 25,
+      }}
+      className="w-full overflow-hidden bg-gray-50 py-10"
+    >
       <div className="px-6">
-        <div
-          ref={sliderRef}
-          className="keen-slider"
-        >
+        <div ref={sliderRef} className="keen-slider">
           {slides.map((slide, index) => (
-            <div
-              key={slide.id+index}
-              className="keen-slider__slide"
-            >
+            <div key={slide.id + index} className="keen-slider__slide">
               <div
                 className={`group relative min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-[1.02] ${slide.bgColor}`}
                 style={{
@@ -77,7 +85,7 @@ const Category = () => {
                 {slide.image && (
                   <div className="absolute inset-0 bg-black/20" />
                 )}
-                
+
                 <div className="relative z-10 h-full flex flex-col justify-between p-6">
                   {/* Title - positioned at top for category card, bottom for image cards */}
                   {slide.type === "category" ? (
@@ -117,11 +125,11 @@ const Category = () => {
                       <div className="inline-block">
                         <h2 className="text-6xl font-black -tracking-tighter relative">
                           {/* Hollow outline version - visible by default */}
-                          <span 
+                          <span
                             className="text-transparent transition-opacity duration-300 group-hover:opacity-0"
                             style={{
-                              WebkitTextStroke: '1px white',
-                              WebkitTextFillColor: 'transparent'
+                              WebkitTextStroke: "1px white",
+                              WebkitTextFillColor: "transparent",
                             }}
                           >
                             {slide.title}
@@ -141,7 +149,7 @@ const Category = () => {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

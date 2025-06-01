@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { IconHeart } from "@tabler/icons-react";
-import { motion } from "motion/react";
+import { motion, useInView } from "motion/react";
 
 type items = {
   id: number;
@@ -132,8 +132,18 @@ const Trending = () => {
     visible: { x: "100%", opacity: 1 },
   };
 
+  // Use the same pattern as Category component
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const sectionInView = useInView(sectionRef, { 
+    once: false, 
+    margin: "0px 0px -20px 0px" 
+  });
+
   return (
-    <div className="min-h-screen w-full bg-gray-50 py-16 px-4">
+    <motion.section
+     
+      className="w-full overflow-hidden bg-gray-50 py-16 px-4"
+    >
       {/* Trending Badge */}
       <div className="flex justify-center gap-6 mb-6">
         <span className="inline-block px-[12px] py-[2px] border-[1px] border-black rounded-full text-sm font-medium text-gray-600 bg-white uppercase">
@@ -149,7 +159,18 @@ const Trending = () => {
       </div>
 
       {/* Products Grid */}
-      <div className="max-w-7xl mx-auto">
+      <motion.div 
+      
+       ref={sectionRef}
+      style={{ height: "auto", minHeight: "100vh" }}
+      
+      animate={{ x: sectionInView ? "0%" : "-100%" }} // Animate when in view
+      transition={{
+        type: "spring",
+        stiffness: 120,
+        damping: 25,
+      }}
+      className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <motion.div
@@ -194,8 +215,7 @@ const Trending = () => {
                   }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="absolute top-[50px] -left-[50px] bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center  h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors "
-               
-               >
+                >
                   Add to Cart
                 </motion.button>
 
@@ -234,15 +254,8 @@ const Trending = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-
-      {/* Optional CTA Section
-      <div className="text-center mt-16">
-        <button className="inline-block px-8 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors">
-          View All Products
-        </button>
-      </div> */}
-    </div>
+      </motion.div>
+    </motion.section>
   );
 };
 
