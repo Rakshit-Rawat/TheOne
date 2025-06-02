@@ -8,6 +8,7 @@ import CompanyFeatures from "./pages/CompanyFeatures"
 import  Pictures from "./pages/Pictures"
 import PopularBrands from "./pages/PopularBrands"
 import Offer from "./pages/Offer";
+import Blog from "./pages/Blog";
 
 const App = () => {
   return (
@@ -17,8 +18,9 @@ const App = () => {
       <Trending></Trending>
       <Pictures></Pictures>
       <CompanyFeatures></CompanyFeatures>
-      <PopularBrands></PopularBrands>
       <Offer></Offer>
+      <PopularBrands></PopularBrands>
+      <Blog></Blog>
       <Touch></Touch>
       <Footer></Footer>
       <CopyRight></CopyRight>
