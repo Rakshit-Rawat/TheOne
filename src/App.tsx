@@ -7,6 +7,7 @@ import CopyRight from "./components/Copyright"
 import CompanyFeatures from "./pages/CompanyFeatures"
 import  Pictures from "./pages/Pictures"
 import PopularBrands from "./pages/PopularBrands"
+import Offer from "./pages/Offer";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Pictures></Pictures>
       <CompanyFeatures></CompanyFeatures>
       <PopularBrands></PopularBrands>
+      <Offer></Offer>
       <Touch></Touch>
       <Footer></Footer>
       <CopyRight></CopyRight>

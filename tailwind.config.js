@@ -16,7 +16,9 @@ export default {
         footer: "#f3f3f3",
       },
       backgroundImage: {
-        hero: "url('https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_slide1_bg.jpg?v=1702698901')",
+        hero: "url(https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_slide1_bg.jpg?v=1702698901)",
+        forest:"url(https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_bg_3.jpg?v=1702981001)",
+        card:"url(https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_card.png?v=1702981001)"
       },
       rotate: {
         "0%": { transform: "rotate(0deg)" },
