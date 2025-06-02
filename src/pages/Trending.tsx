@@ -121,23 +121,12 @@ const Trending = () => {
     ));
   };
 
-  // Animation variants for buttons
-  const leftButtonVariants = {
-    hidden: { x: "200%", opacity: 0 },
-    visible: { x: "-70%", opacity: 1 },
-  };
-
-  const rightButtonVariants = {
-    hidden: { x: "-200%", opacity: 0 },
-    visible: { x: "100%", opacity: 1 },
-  };
-
   return (
     <div className="min-h-screen w-full bg-gray-50 py-16 px-4">
       {/* Trending Badge */}
       <div className="flex justify-center gap-6 mb-6">
         <span className="inline-block px-[12px] py-[2px] border-[1px] border-black rounded-full text-sm font-medium text-gray-600 bg-white uppercase">
-          TRENDING
+          Trending
         </span>
       </div>
 
@@ -148,9 +137,9 @@ const Trending = () => {
         </h2>
       </div>
 
-      {/* Products Grid */}
+      {/* Product Cards */}
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[50px]">
           {products.map((product) => (
             <motion.div
               key={product.id}
@@ -185,30 +174,6 @@ const Trending = () => {
                     className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
-
-                {/* Slide-in Buttons */}
-                <motion.button
-                  variants={{
-                    rest: rightButtonVariants.hidden,
-                    hover: rightButtonVariants.visible,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="absolute top-[50px] -left-[50px] bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center  h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors "
-               
-               >
-                  Add to Cart
-                </motion.button>
-
-                <motion.button
-                  variants={{
-                    rest: leftButtonVariants.hidden,
-                    hover: leftButtonVariants.visible,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="absolute top-[110px] -right-[30px] bg-white text-gray-800 font-semibold  rounded-full shadow-md flex items-center justify-center    h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
-                >
-                  Quick View
-                </motion.button>
               </div>
 
               {/* Product Info */}
@@ -236,12 +201,8 @@ const Trending = () => {
         </div>
       </div>
 
-      {/* Optional CTA Section
-      <div className="text-center mt-16">
-        <button className="inline-block px-8 py-3 bg-gray-900 text-white font-medium rounded-full hover:bg-gray-800 transition-colors">
-          View All Products
-        </button>
-      </div> */}
+      {/* Optional CTA Section */}
+
     </div>
   );
 };

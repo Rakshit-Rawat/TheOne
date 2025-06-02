@@ -6,6 +6,7 @@ import Footer from "./pages/Footer"
 import CopyRight from "./components/Copyright"
 import CompanyFeatures from "./pages/CompanyFeatures"
 import  Pictures from "./pages/Pictures"
+import PopularBrands from "./pages/PopularBrands"
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Trending></Trending>
       <Pictures></Pictures>
       <CompanyFeatures></CompanyFeatures>
+      <PopularBrands></PopularBrands>
       <Touch></Touch>
       <Footer></Footer>
       <CopyRight></CopyRight>
