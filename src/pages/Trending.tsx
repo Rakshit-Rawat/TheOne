@@ -159,7 +159,7 @@ const Trending = () => {
   // Use the same pattern as Category component
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const sectionInView = useInView(sectionRef, {
-    once: false,
+    once: true,
     margin: "0px 0px -20px 0px",
   });
 
