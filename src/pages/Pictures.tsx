@@ -1,4 +1,3 @@
-import React from 'react';
 
 import CurvedTextCircle from '../components/CurvedTextCircle';
 

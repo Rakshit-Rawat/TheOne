@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import {  useRef,  } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { motion, useInView } from "motion/react";
