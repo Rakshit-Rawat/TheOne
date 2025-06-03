@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { IconShoppingCart, IconSearch, IconMenu2 } from "@tabler/icons-react";
+import Logo from "../../public/TheOne..png"
 
 type navItems = {
   name: string;
@@ -35,8 +36,9 @@ export default function Navbar() {
       <div className="flex items-center justify-between w-full px-7 py-6 space-x-4 overflow-hidden ml-10">
         {/* Logo */}
         <div className="mr-[140px] ">
-          <a href="https://demo80.leotheme.com/prestashop/leo_daone_elementor_demo/">
-            <h1 className="text-white text-[40px] font-semibold">DAONE.</h1>
+          <a href="#">
+            <img src={Logo} alt="Logo" />
+            {/* <h1 className="text-white text-[40px] font-semibold">DAONE.</h1> */}
           </a>
         </div>
 
