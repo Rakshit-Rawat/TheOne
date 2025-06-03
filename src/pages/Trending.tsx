@@ -168,7 +168,7 @@ const Trending = () => {
       {/* Trending Badge */}
       <div className="flex justify-center gap-6 mb-6">
         <span className="inline-block px-[12px] py-[2px] border-[1px] border-black rounded-full text-sm font-medium text-gray-600 bg-white uppercase">
-          TRENDING
+          Trending
         </span>
       </div>
 
