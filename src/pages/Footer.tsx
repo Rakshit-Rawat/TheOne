@@ -1,4 +1,5 @@
 import { IconMail } from "@tabler/icons-react";
+import { motion } from "motion/react";
 
 const Footer = () => {
   const footerData = {
@@ -57,13 +58,15 @@ const Footer = () => {
                   <h3 className="font-bold text-lg mb-6">{section.title}</h3>
                   <div className="flex flex-col space-y-3">
                     {section.links.map((link, index) => (
-                      <a
+                      <motion.a
+                        transition={{ ease: "easeInOut",color: "bg-lime-400",duration:.1 }}
+                        whileHover={{ x:6,color: "#84cc16" }}
                         key={index}
                         href="#"
-                        className="text-gray-600 hover:text-lime-300 transition-colors text-sm leading-relaxed"
+                        className="text-gray-600  text-sm leading-relaxed"
                       >
                         {link}
-                      </a>
+                      </motion.a>
                     ))}
                   </div>
                 </div>
