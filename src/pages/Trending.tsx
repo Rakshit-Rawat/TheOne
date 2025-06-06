@@ -1,6 +1,140 @@
 import { useState, useRef, useEffect } from "react";
 import { IconHeart } from "@tabler/icons-react";
 import { motion, useInView } from "motion/react";
+import QuickViewModal from "../components/QuickViewModal";
+import AddToCartModal from "../components/AddToCartModal";
+
+const products: items[] = [
+  {
+    id: 1,
+    name: "HUMMINGBIRD PRINTED T-SHIRT",
+    price: "$23.90",
+    rating: 4,
+    image:
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/24-home_default/hummingbird-printed-t-shirt.jpg",
+    colors: ["#ef4444", "#f97316", "#3b82f6", "#eab308"],
+    category: "clothing",
+    sizes: ["S", "M", "L", "XL"],
+    description:
+      "Comfortable cotton t-shirt with vibrant hummingbird print design.",
+    images: [
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/24-home_default/hummingbird-printed-t-shirt.jpg",
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/24-home_default/hummingbird-printed-t-shirt.jpg",
+    ],
+  },
+  {
+    id: 2,
+    name: "THE BEST IS YET TO COME FRAMED POSTER",
+    price: "$29.00",
+    rating: 0,
+    image:
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/34-home_default/the-best-is-yet-to-come-framed-poster.jpg",
+    colors: ["#f3f4f6", "#a3a3a3", "#78716c"],
+    category: "poster",
+    sizes: ["S", "M"],
+    description: "Printed on rigid paper with matt finish and smooth surface.",
+    images: [
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/34-home_default/the-best-is-yet-to-come-framed-poster.jpg",
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/34-home_default/the-best-is-yet-to-come-framed-poster.jpg",
+    ],
+  },
+  {
+    id: 3,
+    name: "TODAY IS A GOOD DAY FRAMED POSTER",
+    price: "$29.00",
+    rating: 5,
+    image:
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/39-home_default/today-is-a-good-day-framed-poster.jpg",
+    colors: ["#9ca3af", "#3b82f6"],
+    category: "poster",
+    sizes: ["S", "M"],
+    description: "Printed on rigid paper with matt finish and smooth surface.",
+    images: [
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/39-home_default/today-is-a-good-day-framed-poster.jpg",
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/39-home_default/today-is-a-good-day-framed-poster.jpg",
+    ],
+  },
+  {
+    id: 4,
+    name: "HUG THE ADVENTURE BEGINS",
+    price: "$11.90",
+    rating: 3,
+    image:
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/45-home_default/mug-the-adventure-begins.jpg",
+    colors: ["#f97316", "#3b82f6", "#78716c"],
+    category: "accessories",
+    sizes: ["One Size"],
+    description: "High-quality ceramic mug perfect for your morning coffee.",
+    images: [
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/45-home_default/mug-the-adventure-begins.jpg",
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/45-home_default/mug-the-adventure-begins.jpg",
+    ],
+  },
+  {
+    id: 5,
+    name: "HUMMINGBIRD PRINTED SWEATER",
+    price: "$28.70",
+    rating: 3,
+    image:
+      " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/29-home_default/brown-bear-printed-sweater.jpg",
+    colors: ["#f97316", "#3b82f6", "#78716c"],
+    category: "accessories",
+    sizes: ["S", "M", "L"],
+    description: "Cozy sweater with unique printed design for casual wear.",
+    images: [
+      " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/29-home_default/brown-bear-printed-sweater.jpg",
+      " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/29-home_default/brown-bear-printed-sweater.jpg",
+    ],
+  },
+  {
+    id: 6,
+    name: " ADVENTURE BEGINS FRAMED",
+    price: "$29.00",
+    rating: 3,
+    image:
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/35-home_default/the-adventure-begins-framed-poster.jpg",
+    colors: ["#f97316", "#3b82f6", "#78716c"],
+    category: "accessories",
+    sizes: ["S", "M"],
+    description: "Inspirational framed poster for your home or office.",
+    images: [
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/35-home_default/the-adventure-begins-framed-poster.jpg",
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/35-home_default/the-adventure-begins-framed-poster.jpg",
+    ],
+  },
+  {
+    id: 7,
+    name: "MUG TODAY IS A GOOD DAY",
+    price: "$20.00",
+    rating: 3,
+    image:
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/48-home_default/mug-today-is-a-good-day.jpg",
+    colors: ["#f97316", "#3b82f6", "#78716c"],
+    category: "accessories",
+    sizes: ["One Size"],
+    description: "Start your day right with this motivational ceramic mug.",
+    images: [
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/48-home_default/mug-today-is-a-good-day.jpg",
+      "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/48-home_default/mug-today-is-a-good-day.jpg",
+    ],
+  },
+  {
+    id: 8,
+    name: "HUG THE BEST IS YET TO COME",
+    price: "$15.00",
+    rating: 3,
+    image:
+      " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/41-home_default/mug-the-best-is-yet-to-come.jpg",
+    colors: ["#f97316", "#3b82f6", "#78716c"],
+    category: "accessories",
+    sizes: ["One Size"],
+    description: "Perfect gift mug with uplifting message and quality design.",
+    images: [
+      " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/41-home_default/mug-the-best-is-yet-to-come.jpg",
+      " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/41-home_default/mug-the-best-is-yet-to-come.jpg",
+    ],
+  },
+];
 
 type items = {
   id: number;
@@ -10,94 +144,38 @@ type items = {
   image: string;
   colors: string[];
   category: string;
+  sizes: string[];
+  description: string;
+  images: string[];
 };
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: string;
+  image: string;
+  size: string;
+  color: string;
+  quantity: number;
+}
 
 const Trending = () => {
   const [favorites, setFavorites] = useState(new Set());
   const [isDesktop, setIsDesktop] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState<items | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const products: items[] = [
-    {
-      id: 1,
-      name: "HUMMINGBIRD PRINTED T-SHIRT",
-      price: "$23.90",
-      rating: 4,
-      image:
-        "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/24-home_default/hummingbird-printed-t-shirt.jpg",
-      colors: ["#ef4444", "#f97316", "#3b82f6", "#eab308"],
-      category: "clothing",
-    },
-    {
-      id: 2,
-      name: "THE BEST IS YET TO COME FRAMED POSTER",
-      price: "$29.00",
-      rating: 0,
-      image:
-        "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/34-home_default/the-best-is-yet-to-come-framed-poster.jpg",
-      colors: ["#f3f4f6", "#a3a3a3", "#78716c"],
-      category: "poster",
-    },
-    {
-      id: 3,
-      name: "TODAY IS A GOOD DAY FRAMED POSTER",
-      price: "$29.00",
-      rating: 5,
-      image:
-        "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/39-home_default/today-is-a-good-day-framed-poster.jpg",
-      colors: ["#9ca3af", "#3b82f6"],
-      category: "poster",
-    },
-    {
-      id: 4,
-      name: "HUG THE ADVENTURE BEGINS",
-      price: "$11.90",
-      rating: 3,
-      image:
-        "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/45-home_default/mug-the-adventure-begins.jpg",
-      colors: ["#f97316", "#3b82f6", "#78716c"],
-      category: "accessories",
-    },
-    {
-      id: 5,
-      name: "HUMMINGBIRD PRINTED SWEATER",
-      price: "$28.70",
-      rating: 3,
-      image:
-        " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/29-home_default/brown-bear-printed-sweater.jpg",
-      colors: ["#f97316", "#3b82f6", "#78716c"],
-      category: "accessories",
-    },
-    {
-      id: 6,
-      name: " ADVENTURE BEGINS FRAMED",
-      price: "$29.00",
-      rating: 3,
-      image:
-        "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/35-home_default/the-adventure-begins-framed-poster.jpg",
-      colors: ["#f97316", "#3b82f6", "#78716c"],
-      category: "accessories",
-    },
-    {
-      id: 7,
-      name: "MUG TODAY IS A GOOD DAY",
-      price: "$20.00",
-      rating: 3,
-      image:
-        "https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/48-home_default/mug-today-is-a-good-day.jpg",
-      colors: ["#f97316", "#3b82f6", "#78716c"],
-      category: "accessories",
-    },
-    {
-      id: 8,
-      name: "HUG THE BEST IS YET TO COME",
-      price: "$15.00",
-      rating: 3,
-      image:
-        " https://demo80leotheme.b-cdn.net/prestashop/leo_daone_elementor_demo/41-home_default/mug-the-best-is-yet-to-come.jpg",
-      colors: ["#f97316", "#3b82f6", "#78716c"],
-      category: "accessories",
-    },
-  ];
+  // Cart state
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [showCartModal, setShowCartModal] = useState(false);
+  const [addedItem, setAddedItem] = useState<CartItem | null>(null);
+
+  // Modal state
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Handle screen size detection
   useEffect(() => {
@@ -105,13 +183,8 @@ const Trending = () => {
       setIsDesktop(window.innerWidth >= 990);
     };
 
-    // Check on mount
     checkScreenSize();
-
-    // Add event listener for resize
     window.addEventListener("resize", checkScreenSize);
-
-    // Cleanup
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
@@ -138,6 +211,23 @@ const Trending = () => {
     ));
   };
 
+  // Handle direct add to cart from product grid
+  const handleDirectAddToCart = (product: items) => {
+    const newCartItem: CartItem = {
+      id: Date.now(), // Simple ID for demo
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      size: product.sizes[0], // Default to first size
+      color: product.colors[0], // Default to first color
+      quantity: 1,
+    };
+
+    setCartItems(prev => [...prev, newCartItem]);
+    setAddedItem(newCartItem);
+    setShowCartModal(true);
+  };
+
   // Dynamic animation variants based on screen size
   const buttonVariants = {
     leftButton: {
@@ -156,7 +246,96 @@ const Trending = () => {
     },
   };
 
-  // Use the same pattern as Category component
+  const handleQuickView = (product: items) => {
+    setIsLoading(true);
+    setShowModal(true);
+    setCurrentImageIndex(0);
+    setQuantity(1);
+
+    setTimeout(() => {
+      setQuickViewProduct(product);
+      setSelectedSize(product.sizes[0]);
+      setSelectedColor(product.colors[0]);
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setQuickViewProduct(null);
+    setIsLoading(false);
+    setSelectedSize("");
+    setSelectedColor("");
+    setQuantity(1);
+    setCurrentImageIndex(0);
+  };
+
+  const nextImage = () => {
+    if (quickViewProduct) {
+      setCurrentImageIndex(
+        (prev) => (prev + 1) % quickViewProduct.images.length
+      );
+    }
+  };
+
+  const prevImage = () => {
+    if (quickViewProduct) {
+      setCurrentImageIndex(
+        (prev) =>
+          (prev - 1 + quickViewProduct.images.length) %
+          quickViewProduct.images.length
+      );
+    }
+  };
+
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+
+  const handleAddToCart = () => {
+    if (!quickViewProduct) return;
+
+    const newCartItem: CartItem = {
+      id: Date.now(),
+      name: quickViewProduct.name,
+      price: quickViewProduct.price,
+      image: quickViewProduct.image,
+      size: selectedSize,
+      color: selectedColor,
+      quantity: quantity,
+    };
+
+    setCartItems(prev => [...prev, newCartItem]);
+    setAddedItem(newCartItem);
+    setShowCartModal(true);
+    closeModal();
+  };
+
+  const getColorName = (hex: string) => {
+    const colorMap: { [key: string]: string } = {
+      "#ef4444": "Red",
+      "#f97316": "Orange",
+      "#3b82f6": "Blue",
+      "#eab308": "Yellow",
+      "#f3f4f6": "Gray",
+      "#a3a3a3": "Dark Gray",
+      "#78716c": "Brown",
+      "#9ca3af": "Light Gray",
+    };
+    return colorMap[hex] || "Color";
+  };
+
+  const handleContinueShopping = () => {
+    setShowCartModal(false);
+    setAddedItem(null);
+  };
+
+  const handleProceedToCheckout = () => {
+    setShowCartModal(false);
+    setAddedItem(null);
+    // Navigate to checkout page
+    console.log("Proceeding to checkout with items:", cartItems);
+  };
+
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const sectionInView = useInView(sectionRef, {
     once: true,
@@ -238,6 +417,7 @@ const Trending = () => {
                         }}
                         transition={{ duration: 0.2, ease: "easeInOut" }}
                         className="absolute top-[50px] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                        onClick={() => handleDirectAddToCart(product)}
                       >
                         Add to Cart
                       </motion.button>
@@ -249,6 +429,7 @@ const Trending = () => {
                         }}
                         transition={{ duration: 0.2, ease: "easeInOut" }}
                         className="absolute top-[90px] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                        onClick={() => handleQuickView(product)}
                       >
                         Quick View
                       </motion.button>
@@ -258,11 +439,17 @@ const Trending = () => {
                   {/* Mobile Buttons (<990px) - Static positioning */}
                   {!isDesktop && (
                     <>
-                      <button className="absolute bottom-[25%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors">
+                      <button 
+                        className="absolute bottom-[25%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                        onClick={() => handleDirectAddToCart(product)}
+                      >
                         Add to Cart
                       </button>
 
-                      <button className="absolute bottom-[10%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors">
+                      <button
+                        className="absolute bottom-[10%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                        onClick={() => handleQuickView(product)}
+                      >
                         Quick View
                       </button>
                     </>
@@ -293,6 +480,38 @@ const Trending = () => {
             );
           })}
         </div>
+
+        {/* Quick View Modal */}
+        {showModal && (
+          <QuickViewModal
+            product={quickViewProduct}
+            isLoading={isLoading}
+            onClose={closeModal}
+            selectedSize={selectedSize}
+            setSelectedSize={setSelectedSize}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            quantity={quantity}
+            incrementQuantity={incrementQuantity}
+            decrementQuantity={decrementQuantity}
+            currentImageIndex={currentImageIndex}
+            setCurrentImageIndex={setCurrentImageIndex}
+            nextImage={nextImage}
+            prevImage={prevImage}
+            handleAddToCart={handleAddToCart}
+            getColorName={getColorName}
+          />
+        )}
+
+        {/* Add to Cart Modal */}
+        <AddToCartModal
+          isOpen={showCartModal}
+          onClose={() => setShowCartModal(false)}
+          addedItem={addedItem}
+          cartItems={cartItems}
+          onContinueShopping={handleContinueShopping}
+          onProceedToCheckout={handleProceedToCheckout}
+        />
       </motion.div>
     </motion.section>
   );

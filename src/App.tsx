@@ -10,6 +10,7 @@ import PopularBrands from "./pages/PopularBrands"
 import Offer from "./pages/Offer";
 import Blog from "./pages/Blog";
 
+import {Toaster} from "sonner"
 const App = () => {
   return (
     <>
@@ -24,7 +25,9 @@ const App = () => {
       <Touch></Touch>
       <Footer></Footer>
       <CopyRight></CopyRight>
+      <Toaster position="top-right" richColors/>
     </>
+
   );
 };
 
