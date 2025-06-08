@@ -3,7 +3,7 @@ import Category from "./pages/Category";
 import Trending from "./pages/Trending";
 import Touch from "./pages/Touch";
 import Footer from "./pages/Footer"
-import CopyRight from "./components/Copyright"
+import Copyright from "./components/Copyright"
 import CompanyFeatures from "./pages/CompanyFeatures"
 import  Pictures from "./pages/Pictures"
 import PopularBrands from "./pages/PopularBrands"
@@ -24,7 +24,7 @@ const App = () => {
       <Blog></Blog>
       <Touch></Touch>
       <Footer></Footer>
-      <CopyRight></CopyRight>
+      <Copyright></Copyright>
       <Toaster position="top-right" richColors/>
     </>
 

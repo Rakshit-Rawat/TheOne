@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { IconShoppingCart, IconSearch, IconMenu2 } from "@tabler/icons-react";
-import Logo from "../../public/TheOne..png"
+import Logo from "../../public/TheOne..png";
+import cn from "clsx";
 
 type navItems = {
   name: string;
@@ -9,7 +10,12 @@ type navItems = {
   submenu?: string[];
 };
 
-export default function Navbar() {
+interface NavbarProps {
+  className?: string;
+  noMarginLeft?: boolean;
+}
+
+export default function Navbar({ className,noMarginLeft }: NavbarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState("Home");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -32,8 +38,14 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="tablet:bg-transparent bg-neutral-800">
-      <div className="flex items-center justify-between w-full px-7 py-6 space-x-4 overflow-hidden ml-10">
+    <header className="tablet:bg-transparent bg-neutral-800 ">
+      <div
+        className={cn(
+          "flex items-center justify-between w-full px-7 py-6 space-x-4 overflow-hidden ",
+          !noMarginLeft && "ml-10",
+          className
+        )}
+      >
         {/* Logo */}
         <div className="mr-[140px] ">
           <a href="#">

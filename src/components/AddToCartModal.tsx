@@ -1,6 +1,7 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check } from 'lucide-react';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Check } from "lucide-react";
+import { NavLink } from "react-router";
 
 interface CartItem {
   id: number;
@@ -31,19 +32,19 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
 }) => {
   // Calculate cart totals
   const subtotal = cartItems.reduce((total, item) => {
-    const price = parseFloat(item.price.replace('$', ''));
-    return total + (price * item.quantity);
+    const price = parseFloat(item.price.replace("$", ""));
+    return total + price * item.quantity;
   }, 0);
-  
-  const shipping = 7.00;
-  const taxes = 0.00;
+
+  const shipping = 7.0;
+  const taxes = 0.0;
   const totalExcl = subtotal + shipping;
   const totalIncl = totalExcl + taxes;
 
   const getColorName = (hex: string) => {
     const colorMap: { [key: string]: string } = {
       "#ef4444": "Red",
-      "#f97316": "Orange", 
+      "#f97316": "Orange",
       "#3b82f6": "Blue",
       "#eab308": "Yellow",
       "#f3f4f6": "Gray",
@@ -111,9 +112,24 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                           {addedItem.price}
                         </div>
                         <div className="space-y-1 text-gray-600">
-                          <div>Size: <span className="font-medium">{addedItem.size}</span></div>
-                          <div>Color: <span className="font-medium">{getColorName(addedItem.color)}</span></div>
-                          <div>Quantity: <span className="font-medium">{addedItem.quantity}</span></div>
+                          <div>
+                            Size:{" "}
+                            <span className="font-medium">
+                              {addedItem.size}
+                            </span>
+                          </div>
+                          <div>
+                            Color:{" "}
+                            <span className="font-medium">
+                              {getColorName(addedItem.color)}
+                            </span>
+                          </div>
+                          <div>
+                            Quantity:{" "}
+                            <span className="font-medium">
+                              {addedItem.quantity}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -126,31 +142,39 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                     <h4 className="font-bold text-lg text-gray-900 mb-4 uppercase tracking-wide">
                       THERE ARE {cartItems.length} ITEMS IN YOUR CART.
                     </h4>
-                    
+
                     <div className="space-y-3">
                       <div className="flex justify-between items-center text-gray-600">
                         <span>Subtotal:</span>
-                        <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                        <span className="font-semibold">
+                          ${subtotal.toFixed(2)}
+                        </span>
                       </div>
-                      
+
                       <div className="flex justify-between items-center text-gray-600">
                         <span>Shipping:</span>
-                        <span className="font-semibold">${shipping.toFixed(2)}</span>
+                        <span className="font-semibold">
+                          ${shipping.toFixed(2)}
+                        </span>
                       </div>
-                      
+
                       <div className="flex justify-between items-center text-gray-600">
                         <span>Total (tax excl.):</span>
-                        <span className="font-semibold">${totalExcl.toFixed(2)}</span>
+                        <span className="font-semibold">
+                          ${totalExcl.toFixed(2)}
+                        </span>
                       </div>
-                      
+
                       <div className="flex justify-between items-center text-gray-900 text-lg font-bold border-t pt-3">
                         <span>Total (tax incl.):</span>
                         <span>${totalIncl.toFixed(2)}</span>
                       </div>
-                      
+
                       <div className="flex justify-between items-center text-gray-600">
                         <span>Taxes:</span>
-                        <span className="font-semibold">${taxes.toFixed(2)}</span>
+                        <span className="font-semibold">
+                          ${taxes.toFixed(2)}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -163,13 +187,15 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                     >
                       CONTINUE SHOPPING
                     </button>
-                    <button
-                      onClick={onProceedToCheckout}
-                      className="flex-1 px-6 py-3 bg-lime-400 text-gray-900 font-semibold rounded-lg hover:bg-lime-500 transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
-                    >
-                      <Check className="w-5 h-5" />
-                      PROCEED TO CHECKOUT
-                    </button>
+                    <NavLink to="/checkout">
+                      <button
+                        onClick={onProceedToCheckout}
+                        className="flex-1 px-6 py-3 bg-lime-400 text-gray-900 font-semibold rounded-lg hover:bg-lime-500 transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
+                      >
+                        <Check className="w-5 h-5" />
+                        Procceed To Checkout
+                      </button>
+                    </NavLink>
                   </div>
                 </div>
               </div>

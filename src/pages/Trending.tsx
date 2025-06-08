@@ -223,7 +223,7 @@ const Trending = () => {
       quantity: 1,
     };
 
-    setCartItems(prev => [...prev, newCartItem]);
+    setCartItems((prev) => [...prev, newCartItem]);
     setAddedItem(newCartItem);
     setShowCartModal(true);
   };
@@ -304,7 +304,7 @@ const Trending = () => {
       quantity: quantity,
     };
 
-    setCartItems(prev => [...prev, newCartItem]);
+    setCartItems((prev) => [...prev, newCartItem]);
     setAddedItem(newCartItem);
     setShowCartModal(true);
     closeModal();
@@ -439,15 +439,15 @@ const Trending = () => {
                   {/* Mobile Buttons (<990px) - Static positioning */}
                   {!isDesktop && (
                     <>
-                      <button 
-                        className="absolute bottom-[25%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                      <button
+                        className="absolute bottom-[25%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
                         onClick={() => handleDirectAddToCart(product)}
                       >
                         Add to Cart
                       </button>
 
                       <button
-                        className="absolute bottom-[10%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                        className="absolute bottom-[10%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
                         onClick={() => handleQuickView(product)}
                       >
                         Quick View

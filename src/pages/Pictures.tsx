@@ -1,5 +1,4 @@
-
-import CurvedTextCircle from '../components/CurvedTextCircle';
+import CurvedTextCircle from "../components/CurvedTextCircle";
 
 const Pictures = () => {
   return (
@@ -8,17 +7,34 @@ const Pictures = () => {
       <div className="hidden md:block h-full">
         {/* Container with proper responsive scaling */}
         <div className="relative w-full h-full">
-          {/* Left Image - Using responsive positioning */}
-          <div className="absolute top-[15%] left-0 w-[65vw] max-w-[800px]">
+          {/* Left Image - Using responsive positioning with scaling */}
+          <div
+            className="absolute top-[15%] left-0
+                          w-[40vw] md:w-[46vw] lg:w-[45vw] xl:w-[48vw]
+                          min-w-[200px] md:min-w-[300px] lg:min-w-[300px]
+                          max-w-[500px] md:max-w-[580px] lg:max-w-[800px]"
+          >
             <img
               src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_image_1.jpg?v=1702967614"
               alt="Image 1"
               className="w-full h-auto object-cover"
             />
+             <div
+            className="absolute  left-[15%] z-10
+                          scale-75 md:scale-90 lg:scale-100 xl:scale-110
+                         origin-left"
+          >
+            <CurvedTextCircle />
+          </div>
           </div>
 
-          {/* Right Image - Responsive positioning and sizing */}
-          <div className="absolute top-[25%] right-[5%] w-[90vw]  min-w-[200px] max-w-[350px]">
+          {/* Right Image - Responsive positioning and sizing with scaling */}
+          <div
+            className="absolute top-[25%] right-[5%]
+                          w-[25vw] md:w-[28vw] lg:w-[32vw] xl:w-[35vw]
+                          min-w-[150px] md:min-w-[180px] lg:min-w-[200px]
+                          max-w-[280px] md:max-w-[320px] lg:max-w-[590px]"
+          >
             <img
               src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_image_2.jpg?v=1702967614"
               alt="Image 2"
@@ -26,10 +42,8 @@ const Pictures = () => {
             />
           </div>
 
-          {/* Text Component - Responsive positioning */}
-          <div className="absolute top-[60%] left-[8%] z-10">
-            <CurvedTextCircle />
-          </div>
+          {/* Text Component - Responsive positioning with scaling */}
+         
         </div>
       </div>
 
