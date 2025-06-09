@@ -7,6 +7,7 @@ import {
 } from "@tabler/icons-react";
 import Logo from "../../public/TheOne..png";
 import cn from "clsx";
+import { useCart } from "../contexts/CartContext"; // Import the useCart hook
 
 type navItems = {
   name: string;
@@ -25,6 +26,10 @@ export default function Navbar({ className, noMarginLeft }: NavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Use the cart context to get total items
+  const { getTotalItems } = useCart();
+  const totalCartItems = getTotalItems();
 
   const navItems: navItems[] = [
     { name: "Home", href: "#" },
@@ -156,9 +161,12 @@ export default function Navbar({ className, noMarginLeft }: NavbarProps) {
             <div className="w-8 h-8 rounded flex items-center justify-center">
               <IconShoppingCart />
             </div>
-            <span className="absolute -top-1 -right-1 bg-lime-400 text-black rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold">
-              0
-            </span>
+            {/* Updated to show actual cart item count with conditional rendering */}
+            {totalCartItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-lime-400 text-black rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold">
+                {totalCartItems > 99 ? '99+' : totalCartItems}
+              </span>
+            )}
           </div>
 
           {/* Hamburger Icon */}

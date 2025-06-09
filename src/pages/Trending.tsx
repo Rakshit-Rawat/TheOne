@@ -3,8 +3,10 @@ import { IconHeart } from "@tabler/icons-react";
 import { motion, useInView } from "motion/react";
 import QuickViewModal from "../components/QuickViewModal";
 import AddToCartModal from "../components/AddToCartModal";
+import { useCart } from '../contexts/CartContext';
+import type { Product } from '../contexts/CartContext';
 
-const products: items[] = [
+const products: Product[] = [
   {
     id: 1,
     name: "HUMMINGBIRD PRINTED T-SHIRT",
@@ -136,40 +138,17 @@ const products: items[] = [
   },
 ];
 
-type items = {
-  id: number;
-  name: string;
-  price: string;
-  rating: number;
-  image: string;
-  colors: string[];
-  category: string;
-  sizes: string[];
-  description: string;
-  images: string[];
-};
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  size: string;
-  color: string;
-  quantity: number;
-}
-
 const Trending = () => {
+  const { cartItems, addToCart } = useCart(); // Use global cart context
   const [favorites, setFavorites] = useState(new Set());
   const [isDesktop, setIsDesktop] = useState(false);
-  const [quickViewProduct, setQuickViewProduct] = useState<items | null>(null);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Cart state
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  // Cart modal state
   const [showCartModal, setShowCartModal] = useState(false);
-  const [addedItem, setAddedItem] = useState<CartItem | null>(null);
+  const [addedItem, setAddedItem] = useState<any>(null);
 
   // Modal state
   const [selectedSize, setSelectedSize] = useState("");
@@ -212,18 +191,24 @@ const Trending = () => {
   };
 
   // Handle direct add to cart from product grid
-  const handleDirectAddToCart = (product: items) => {
-    const newCartItem: CartItem = {
-      id: Date.now(), // Simple ID for demo
+  const handleDirectAddToCart = (product: Product) => {
+    const size = product.sizes[0]; // Default to first size
+    const color = product.colors[0]; // Default to first color
+    const qty = 1;
+
+    addToCart(product, size, color, qty);
+
+    // Show cart modal
+    const newCartItem = {
+      id: product.id,
       name: product.name,
       price: product.price,
       image: product.image,
-      size: product.sizes[0], // Default to first size
-      color: product.colors[0], // Default to first color
-      quantity: 1,
+      size,
+      color,
+      quantity: qty,
     };
-
-    setCartItems((prev) => [...prev, newCartItem]);
+    
     setAddedItem(newCartItem);
     setShowCartModal(true);
   };
@@ -246,7 +231,7 @@ const Trending = () => {
     },
   };
 
-  const handleQuickView = (product: items) => {
+  const handleQuickView = (product: Product) => {
     setIsLoading(true);
     setShowModal(true);
     setCurrentImageIndex(0);
@@ -294,8 +279,10 @@ const Trending = () => {
   const handleAddToCart = () => {
     if (!quickViewProduct) return;
 
-    const newCartItem: CartItem = {
-      id: Date.now(),
+    addToCart(quickViewProduct, selectedSize, selectedColor, quantity);
+
+    const newCartItem = {
+      id: quickViewProduct.id,
       name: quickViewProduct.name,
       price: quickViewProduct.price,
       image: quickViewProduct.image,
@@ -304,7 +291,6 @@ const Trending = () => {
       quantity: quantity,
     };
 
-    setCartItems((prev) => [...prev, newCartItem]);
     setAddedItem(newCartItem);
     setShowCartModal(true);
     closeModal();

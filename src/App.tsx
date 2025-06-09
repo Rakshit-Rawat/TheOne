@@ -1,34 +1,34 @@
+// App.tsx
+import React from "react";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
 import Trending from "./pages/Trending";
 import Touch from "./pages/Touch";
-import Footer from "./pages/Footer"
-import Copyright from "./components/Copyright"
-import CompanyFeatures from "./pages/CompanyFeatures"
-import  Pictures from "./pages/Pictures"
-import PopularBrands from "./pages/PopularBrands"
+import Footer from "./pages/Footer";
+import Copyright from "./components/Copyright";
+import CompanyFeatures from "./pages/CompanyFeatures";
+import Pictures from "./pages/Pictures";
+import PopularBrands from "./pages/PopularBrands";
 import Offer from "./pages/Offer";
 import Blog from "./pages/Blog";
+import { Toaster } from "sonner";
 
-import {Toaster} from "sonner"
 const App = () => {
   return (
-    
     <>
-      <Home></Home>
-      <Category></Category>
-      <Trending></Trending>
-      <Pictures></Pictures>
-      <CompanyFeatures></CompanyFeatures>
-      <Offer></Offer>
-      <PopularBrands></PopularBrands>
-      <Blog></Blog>
-      <Touch></Touch>
-      <Footer></Footer>
-      <Copyright></Copyright>
-      <Toaster position="top-right" richColors/>
+      <Home />
+      <Category />
+      <Trending />
+      <Pictures />
+      <CompanyFeatures />
+      <Offer />
+      <PopularBrands />
+      <Blog />
+      <Touch />
+      <Footer />
+      <Copyright />
+      <Toaster position="top-right" richColors />
     </>
-
   );
 };
 
