@@ -2,7 +2,7 @@ import { IconChevronRight } from "@tabler/icons-react";
 
 const Offer = () => {
   return (
-    <div className="relative bg-forest bg-cover bg-center bg-no-repeat w-full my-20 font-inter text-[#666] text-[16px] box-border
+    <div className="relative bg-forest bg-cover bg-center bg-no-repeat w-full my-40 font-inter text-[#666] text-[16px] box-border
                     h-[520px] px-[30px] py-[120px] flex items-center justify-between
                     sm:h-auto sm:px-4 sm:py-8 sm:flex-col sm:gap-8">
       {/* Dark overlay for better text readability */}

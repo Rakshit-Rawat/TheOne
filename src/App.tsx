@@ -13,6 +13,7 @@ import Blog from "./pages/Blog";
 import {Toaster} from "sonner"
 const App = () => {
   return (
+    
     <>
       <Home></Home>
       <Category></Category>

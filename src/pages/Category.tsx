@@ -16,7 +16,7 @@ const Category = () => {
     {
       id: 2,
       type: "image",
-      title: "HIKING",
+      title: "SKIING",
       image:
         "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       bgColor: "bg-black/40",
@@ -27,7 +27,7 @@ const Category = () => {
       type: "image",
       title: "RUNNING",
       image:
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1547483238-f400e65ccd56?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       bgColor: "bg-black/40",
       textColor: "text-white",
     },
@@ -36,7 +36,7 @@ const Category = () => {
       type: "image",
       title: "CYCLING",
       image:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://plus.unsplash.com/premium_photo-1713184149461-69b0abeb3daa?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Q3ljbGluZ3xlbnwwfHwwfHx8MA%3D%3D",
       bgColor: "bg-black/40",
       textColor: "text-white",
     },
@@ -53,7 +53,7 @@ const Category = () => {
   // const [isInView, setIsInView] = useState(false);
 
   const sectionRef = useRef<HTMLElement | null>(null);
-  const sectionInView = useInView(sectionRef, { once: false ,  margin: "0px 100px -600px 0px"});
+  const sectionInView = useInView(sectionRef, { once: true ,  margin: "0px 100px -600px 0px"});
 
 
 
@@ -91,7 +91,7 @@ const Category = () => {
                   {slide.type === "category" ? (
                     <div className="flex-1 flex items-start pt-4">
                       <div>
-                        <div className="text-xs font-medium text-orange-500 mb-2 tracking-wider">
+                        <div className="text-5xl font-extrabold text-orange-500 mb-10 tracking-wider">
                           CATEGORY
                         </div>
                         <h2 className="text-3xl font-black text-black leading-tight whitespace-pre-line">
@@ -105,12 +105,12 @@ const Category = () => {
 
                   {/* Categories for first card */}
                   {slide.categories && (
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-3 mt-20 ">
+                      <div className="grid grid-cols-2 gap-4 ">
                         {slide.categories.map((cat, idx) => (
                           <button
                             key={idx}
-                            className="px-4 py-2 border border-black/20 rounded-full text-sm font-medium text-black bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors"
+                            className=" px-4 py-2 border border-black/20 rounded-full text-lg font-barlow text-black bg-white/10  hover:bg-white/20 transition-colors"
                           >
                             {cat}
                           </button>
@@ -123,7 +123,7 @@ const Category = () => {
                   {slide.type === "image" && (
                     <div className="mt-[480px] ">
                       <div className="inline-block">
-                        <h2 className="text-6xl font-black -tracking-tighter relative">
+                        <h2 className="text-7xl font-black -tracking-tighter relative">
                           {/* Hollow outline version - visible by default */}
                           <span
                             className="text-transparent transition-opacity duration-300 group-hover:opacity-0"

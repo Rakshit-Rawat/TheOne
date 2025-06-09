@@ -1,28 +1,39 @@
 import React from "react";
 
-const CurvedTextCircle: React.FC = () => {
-  // ===== CUSTOMIZABLE VALUES =====
-  const text: string = "TRUSTED BRAND FOREVER"; // Change your text here
-  const speed: number = 4; // Animation speed in seconds (lower = faster)
-  const radius: number = 120; // Circle radius in pixels
-  const fontSize: number = 30; // Font size in pixels
-  const letterSpacing: number = 1; // Letter spacing in pixels (0 = normal)
-  const wordSpacing: number = 200; // Word spacing in pixels (0 = normal)
-  // ===============================
+interface CurvedTextCircleProps {
+  text: string;
+  speed: number;
+  radius: number;
+  fontSize: number;
+  letterSpacing: number;
+  wordSpacing: number;
+  className?: string;
+}
+
+const CurvedTextCircle: React.FC<CurvedTextCircleProps> = ({
+  text,
+  speed,
+  radius,
+  fontSize,
+  letterSpacing,
+  wordSpacing,
+  className = "",
+}) => {
+  const svgSize = (radius + 60) * 2;
 
   return (
-    <div className="flex justify-center items-center">
+    <div className={`flex justify-center items-center ${className}`}>
       <div
         className="relative flex justify-center items-center"
         style={{
-          width: `${(radius + 60) * 2}px`,
-          height: `${(radius + 60) * 1}px`,
+          width: `${svgSize}px`,
+          height: `${svgSize}px`,
         }}
       >
         <svg
-          width={`${(radius + 60) * 2}`}
-          height={`${(radius + 60) * 2}`}
-          viewBox={`0 0 ${(radius + 60) * 2} ${(radius + 60) * 2}`}
+          width={svgSize}
+          height={svgSize}
+          viewBox={`0 0 ${svgSize} ${svgSize}`}
           className="absolute"
           style={{
             animation: `spin ${speed}s linear infinite`,
@@ -39,7 +50,7 @@ const CurvedTextCircle: React.FC = () => {
             />
           </defs>
           <text
-            className=" font-bold"
+            className="font-bold"
             style={{
               fontSize: `${fontSize}px`,
               letterSpacing: `${letterSpacing}px`,

@@ -40,3 +40,11 @@
     transform: rotate(360deg);
   }
 }
+
+.spinning-text {
+  animation: spin 4s linear infinite;
+}
+
+.image_spin {
+  animation: spin 10s linear infinite;
+}
