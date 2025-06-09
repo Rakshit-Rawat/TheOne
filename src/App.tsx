@@ -1,5 +1,4 @@
 // App.tsx
-import React from "react";
 import Home from "./pages/Home";
 import Category from "./pages/Category";
 import Trending from "./pages/Trending";
