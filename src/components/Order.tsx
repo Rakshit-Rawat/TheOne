@@ -3,7 +3,7 @@ import { Eye, EyeOff, CreditCard, Truck } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 
 const Order = () => {
-  const { cartItems, getTotalPrice } = useCart();
+  const { cartItems } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [isGuest, setIsGuest] = useState(true);
