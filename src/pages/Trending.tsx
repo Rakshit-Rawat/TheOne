@@ -3,8 +3,8 @@ import { IconHeart } from "@tabler/icons-react";
 import { motion, useInView } from "motion/react";
 import QuickViewModal from "../components/QuickViewModal";
 import AddToCartModal from "../components/AddToCartModal";
-import { useCart } from '../contexts/CartContext';
-import type { Product } from '../contexts/CartContext';
+import { useCart } from "../contexts/CartContext";
+import type { Product } from "../contexts/CartContext";
 
 const products: Product[] = [
   {
@@ -142,7 +142,9 @@ const Trending = () => {
   const { cartItems, addToCart } = useCart(); // Use global cart context
   const [favorites, setFavorites] = useState(new Set());
   const [isDesktop, setIsDesktop] = useState(false);
-  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
+    null
+  );
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -208,7 +210,7 @@ const Trending = () => {
       color,
       quantity: qty,
     };
-    
+
     setAddedItem(newCartItem);
     setShowCartModal(true);
   };
@@ -424,21 +426,21 @@ const Trending = () => {
 
                   {/* Mobile Buttons (<990px) - Static positioning */}
                   {!isDesktop && (
-                    <>
+                    <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-6">
                       <button
-                        className="absolute bottom-[25%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
+                        className="bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
                         onClick={() => handleDirectAddToCart(product)}
                       >
                         Add to Cart
                       </button>
 
                       <button
-                        className="absolute bottom-[10%] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
+                        className="bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
                         onClick={() => handleQuickView(product)}
                       >
                         Quick View
                       </button>
-                    </>
+                    </div>
                   )}
                 </div>
 

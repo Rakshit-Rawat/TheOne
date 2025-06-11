@@ -42,14 +42,23 @@ const Category = () => {
     },
   ];
 
-  const [sliderRef] = useKeenSlider<HTMLDivElement>({
-    slides: {
-      perView: 3.2,
-      spacing: 20,
+ const [sliderRef] = useKeenSlider<HTMLDivElement>({
+  loop: true,
+  drag: true,
+  breakpoints: {
+    "(min-width: 1024px)": {
+      slides: {
+        perView: 3.2,
+        spacing: 20,
+      },
     },
-    loop: true,
-    drag: true,
-  });
+  },
+  slides: {
+    perView: 2,
+    spacing: 20,
+  },
+});
+
   // const [isInView, setIsInView] = useState(false);
 
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -75,7 +84,7 @@ const Category = () => {
           {slides.map((slide, index) => (
             <div key={slide.id + index} className="keen-slider__slide">
               <div
-                className={`group relative min-h-[500px] lg:min-h-[600px] rounded-2xl overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-[1.02] ${slide.bgColor}`}
+                className={`group relative h-full rounded-2xl overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-[1.02] ${slide.bgColor}`}
                 style={{
                   backgroundImage: slide.image ? `url(${slide.image})` : "none",
                   backgroundSize: "cover",
