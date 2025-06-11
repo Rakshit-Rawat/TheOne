@@ -1,5 +1,4 @@
-// contexts/CartContext.tsx
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from "react";
 
 // Types
 export interface CartItem {
@@ -27,9 +26,19 @@ export interface Product {
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (product: Product, size: string, color: string, quantity: number) => void;
+  addToCart: (
+    product: Product,
+    size: string,
+    color: string,
+    quantity: number
+  ) => void;
   removeFromCart: (id: number, size: string, color: string) => void;
-  updateQuantity: (id: number, size: string, color: string, quantity: number) => void;
+  updateQuantity: (
+    id: number,
+    size: string,
+    color: string,
+    quantity: number
+  ) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
@@ -39,23 +48,25 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 // Provider Component
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const addToCart = (product: Product, size: string, color: string, quantity: number) => {
-    setCartItems(prev => {
-      // Check if item already exists in cart
-      const existingItemIndex = prev.findIndex(
-        item => item.id === product.id && item.size === size && item.color === color
-      );
+  const addToCart = useCallback(
+    (product: Product, size: string, color: string, quantity: number) => {
+      setCartItems((prev) => {
+        const existingItemIndex = prev.findIndex(
+          (item) =>
+            item.id === product.id && item.size === size && item.color === color
+        );
 
-      if (existingItemIndex !== -1) {
-        // Update quantity if item exists
-        const updatedCart = [...prev];
-        updatedCart[existingItemIndex].quantity += quantity;
-        return updatedCart;
-      } else {
-        // Add new item to cart
+        if (existingItemIndex !== -1) {
+          const updatedCart = [...prev];
+          updatedCart[existingItemIndex].quantity += quantity;
+          return updatedCart;
+        }
+
         const newItem: CartItem = {
           id: product.id,
           name: product.name,
@@ -65,46 +76,57 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           color,
           quantity,
         };
+
         return [...prev, newItem];
+      });
+    },
+    []
+  );
+
+  const removeFromCart = useCallback(
+    (id: number, size: string, color: string) => {
+      setCartItems((prev) =>
+        prev.filter(
+          (item) =>
+            !(item.id === id && item.size === size && item.color === color)
+        )
+      );
+    },
+    []
+  );
+
+  const updateQuantity = useCallback(
+    (id: number, size: string, color: string, quantity: number) => {
+      if (quantity <= 0) {
+        removeFromCart(id, size, color);
+        return;
       }
-    });
-  };
 
-  const removeFromCart = (id: number, size: string, color: string) => {
-    setCartItems(prev => 
-      prev.filter(item => !(item.id === id && item.size === size && item.color === color))
-    );
-  };
+      setCartItems((prev) =>
+        prev.map((item) =>
+          item.id === id && item.size === size && item.color === color
+            ? { ...item, quantity }
+            : item
+        )
+      );
+    },
+    [removeFromCart]
+  );
 
-  const updateQuantity = (id: number, size: string, color: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id, size, color);
-      return;
-    }
-
-    setCartItems(prev => 
-      prev.map(item => 
-        item.id === id && item.size === size && item.color === color
-          ? { ...item, quantity }
-          : item
-      )
-    );
-  };
-
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
-  };
+  }, []);
 
-  const getTotalItems = () => {
+  const getTotalItems = useCallback(() => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
+  }, [cartItems]);
 
-  const getTotalPrice = () => {
+  const getTotalPrice = useCallback(() => {
     return cartItems.reduce((total, item) => {
-      const price = parseFloat(item.price.replace('$', ''));
-      return total + (price * item.quantity);
+      const price = parseFloat(item.price.replace("$", ""));
+      return total + price * item.quantity;
     }, 0);
-  };
+  }, [cartItems]);
 
   const value: CartContextType = {
     cartItems,
@@ -116,18 +138,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     getTotalPrice,
   };
 
-  return (
-    <CartContext.Provider value={value}>
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 // Custom Hook
-export const useCart = () => {
+export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+  if (!context) {
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
 };

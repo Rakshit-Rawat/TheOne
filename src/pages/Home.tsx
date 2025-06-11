@@ -9,19 +9,23 @@ const Home = () => {
       <Navbar />
 
       {/* Centered content */}
-      <div className="flex-grow flex justify-center items-center relative z-10 text-center px-4">
+      <main className="flex-grow flex justify-center items-center relative z-10 text-center px-4">
         <div>
           <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-xl font-normal text-white"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-2xl md:text-4xl font-semibold text-white"
           >
             ONE & ONLY SOLUTION FOR OUTDOOR CLOTHING
           </motion.h1>
 
           <SaleLabel />
         </div>
-      </div>
+      </main>
+
+      {/* Optional overlay to enhance text readability */}
+      <div className="absolute inset-0 bg-black opacity-40 z-0"></div>
     </div>
   );
 };

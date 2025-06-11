@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useId } from "react";
 
 interface CurvedTextCircleProps {
   text: string;
-  speed: number;
+  speed: number; // in seconds
   radius: number;
   fontSize: number;
   letterSpacing: number;
@@ -20,15 +20,24 @@ const CurvedTextCircle: React.FC<CurvedTextCircleProps> = ({
   className = "",
 }) => {
   const svgSize = (radius + 60) * 2;
+  const pathId = useId(); // unique ID for the path
+
+  const pathD = `
+    M ${radius + 60},${radius + 60}
+    m -${radius}, 0
+    a ${radius},${radius} 0 1,1 ${radius * 2},0
+    a ${radius},${radius} 0 1,1 -${radius * 2},0
+  `;
 
   return (
-    <div className={`flex justify-center items-center ${className}`}>
+    <div
+      className={`flex justify-center items-center ${className}`}
+      aria-label={`Spinning text circle: ${text}`}
+      role="img"
+    >
       <div
         className="relative flex justify-center items-center"
-        style={{
-          width: `${svgSize}px`,
-          height: `${svgSize}px`,
-        }}
+        style={{ width: svgSize, height: svgSize }}
       >
         <svg
           width={svgSize}
@@ -37,17 +46,11 @@ const CurvedTextCircle: React.FC<CurvedTextCircleProps> = ({
           className="absolute"
           style={{
             animation: `spin ${speed}s linear infinite`,
+            pointerEvents: "none",
           }}
         >
           <defs>
-            <path
-              id="circle-path"
-              d={`M ${radius + 60}, ${
-                radius + 60
-              } m -${radius}, 0 a ${radius},${radius} 0 1,1 ${
-                radius * 2
-              },0 a ${radius},${radius} 0 1,1 -${radius * 2},0`}
-            />
+            <path id={pathId} d={pathD} />
           </defs>
           <text
             className="font-bold"
@@ -57,7 +60,7 @@ const CurvedTextCircle: React.FC<CurvedTextCircleProps> = ({
               wordSpacing: `${wordSpacing}px`,
             }}
           >
-            <textPath href="#circle-path" startOffset="0%">
+            <textPath href={`#${pathId}`} startOffset="0%">
               {text}
             </textPath>
           </text>

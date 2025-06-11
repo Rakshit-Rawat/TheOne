@@ -43,33 +43,34 @@ const Footer = () => {
   };
 
   return (
-    <div className="bg-footer px-[30px] pt-[30px] relative text-black font-inter">
+    <footer className="bg-footer px-[30px] pt-[30px] relative text-black font-inter" aria-label="Site footer">
       {/* Bottom full-width border */}
       <div className="absolute bottom-0 left-0 w-full h-px bg-black" />
 
       {/* Content: Flex layout for left and right div */}
       <div className="flex flex-col lg:flex-row">
-        {/* LEFT (Help, Resources, Essential) - This stays as 3 columns on all screen sizes */}
+        {/* LEFT (Help, Resources, Essential) */}
         <div className="w-full lg:w-[60%] border-t lg:border-r border-black">
           <div className="w-full p-8 overflow-y-auto mt-16">
             <div className="grid grid-cols-3 lg:grid-cols-3 gap-8">
               {Object.entries(footerData).map(([key, section]) => (
-                <div key={key} className="flex flex-col">
+                <nav key={key} aria-label={section.title}>
                   <h3 className="font-bold text-lg mb-6">{section.title}</h3>
-                  <div className="flex flex-col space-y-3">
+                  <ul className="flex flex-col space-y-3">
                     {section.links.map((link, index) => (
-                      <motion.a
-                        transition={{ ease: "easeInOut",color: "bg-lime-400",duration:.1 }}
-                        whileHover={{ x:6,color: "#84cc16" }}
-                        key={index}
-                        href="#"
-                        className="text-gray-600  text-sm leading-relaxed"
-                      >
-                        {link}
-                      </motion.a>
+                      <motion.li key={index}>
+                        <motion.a
+                          href="#"
+                          className="text-gray-600 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-lime-300 rounded"
+                          transition={{ ease: "easeInOut", color: "bg-lime-400", duration: 0.1 }}
+                          whileHover={{ x: 6, color: "#84cc16" }}
+                        >
+                          {link}
+                        </motion.a>
+                      </motion.li>
                     ))}
-                  </div>
-                </div>
+                  </ul>
+                </nav>
               ))}
             </div>
           </div>
@@ -78,36 +79,49 @@ const Footer = () => {
         {/* RIGHT (Subscribe Now) */}
         <div className="w-full lg:w-[40%] border-t lg:border-l pl-16 border-black mt-8 lg:mt-0">
           <div className="w-full p-8 flex flex-col justify-between mt-16">
-            <div>
-              <h3 className="font-semibold text-2xl mb-4 font-barlow">
-                SUSCRIBE NOW
+            <section aria-labelledby="subscribe-title">
+              <h3 id="subscribe-title" className="font-semibold text-2xl mb-4 font-barlow">
+                SUBSCRIBE NOW
               </h3>
               <p className="text-gray-600 text-sm mb-6">
                 Subscribe to get updates on new products and exclusive offers.
               </p>
 
-              {/* Flex container for the input and icon */}
-              <div className="relative flex items-center w-full">
-                {/* Mail Icon */}
-                <div className="absolute left-3">
-                  <IconMail className="text-gray-600" />
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  // handle subscription here
+                  alert("Subscribed!");
+                }}
+                className="flex flex-col space-y-4"
+                aria-label="Subscription form"
+              >
+                <label htmlFor="email" className="sr-only">
+                  Email address
+                </label>
+                <div className="relative flex items-center w-full">
+                  <IconMail className="text-gray-600 absolute left-3 pointer-events-none" aria-hidden="true" />
+                  <input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    required
+                    className="pl-10 px-3 py-2 border border-gray-300 text-sm rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-lime-300"
+                    aria-required="true"
+                  />
                 </div>
-                {/* Email input field with padding on the left to make space for the icon */}
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="pl-10 px-3 py-2 border border-gray-300 text-sm rounded-lg w-full"
-                />
-              </div>
-
-              <button className="px-4 py-3 my-4 bg-black rounded-lg text-white text-sm hover:bg-lime-300 transition-colors">
-                Subscribe
-              </button>
-            </div>
+                <button
+                  type="submit"
+                  className="px-4 py-3 bg-black rounded-lg text-white text-sm hover:bg-lime-300 transition-colors focus:outline-none focus:ring-2 focus:ring-lime-300"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </section>
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

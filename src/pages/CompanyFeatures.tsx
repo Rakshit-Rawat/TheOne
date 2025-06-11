@@ -26,7 +26,10 @@ const CompanyFeatures = () => {
   ];
 
   return (
-    <div className="w-full py-10 px-4">
+    <section
+      aria-labelledby="company-features-title"
+      className="w-full py-10 px-4"
+    >
       {/* Section Title */}
       <motion.div
         className="flex justify-center gap-6 mb-6"
@@ -40,67 +43,81 @@ const CompanyFeatures = () => {
         </span>
       </motion.div>
 
-      <motion.div
-        className="text-center mb-[62px]"
+      <motion.h2
+        id="company-features-title"
+        className="text-center mb-[62px] text-[60px] md:text-[50px] sm:text-[40px] font-semibold uppercase leading-[1em] text-[#212121]"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px 0px -100px 0px" }}
         transition={{ duration: 0.3, ease: "easeIn" }}
+        tabIndex={-1} // allows keyboard users to focus on the section title easily
       >
-        <h2 className="text-[60px] md:text-[50px] sm:text-[40px] font-semibold uppercase leading-[1em] text-[#212121]">
-          COMPANY FEATURES
-        </h2>
-      </motion.div>
+        COMPANY FEATURES
+      </motion.h2>
 
       {/* Feature Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-[770px]:grid-cols-1 gap-[50px] max-w-6xl mx-auto space-x-6 max-[770px]:space-x-0 mb-16">
+      <ul
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-[770px]:grid-cols-1 gap-[50px] max-w-6xl mx-auto space-x-6 max-[770px]:space-x-0 mb-16"
+        role="list"
+      >
         {features.map((feature, idx) => (
-          <motion.div
+          <motion.li
             key={idx}
             className="flex flex-col items-left text-center gap-5 p-4"
             initial={{ opacity: 0, y: idx % 2 === 0 ? -50 : 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{
-              once: true,
-              amount: 0.3,
-              margin: "-100px 0px -100px 0px",
-            }}
+            viewport={{ once: true, amount: 0.3, margin: "-100px 0px -100px 0px" }}
             transition={{ duration: 0.2, ease: "easeOut" }}
+            role="listitem"
           >
-            <div className="w-24 h-24 mb-6 bg-gray-200 rounded-full flex items-center justify-center hover:bg-lime-300">
+            <div
+              className="w-24 h-24 mb-6 bg-gray-200 rounded-full flex items-center justify-center hover:bg-lime-300"
+              aria-hidden="true" // Decorative container, ignore for screen readers
+            >
               <img
                 src={feature.src}
                 alt={feature.title}
                 className="w-12 h-12 object-contain"
                 loading="lazy"
+                role="img"
               />
             </div>
-            <h3 className="text-2xl font-semibold uppercase text-start leading-none text-[#212121]">
+            <h3
+              className="text-2xl font-semibold uppercase text-start leading-none text-[#212121]"
+              tabIndex={0} // make focusable for keyboard users
+            >
               {feature.title}
             </h3>
-            <p className="text-sm font-normal text-start leading-6 text-[#666666] max-w-[300px] font-inter">
+            <p
+              className="text-sm font-normal text-start leading-6 text-[#666666] max-w-[300px] font-inter"
+              tabIndex={0} // make focusable for keyboard users
+            >
               {feature.desc}
             </p>
-          </motion.div>
+          </motion.li>
         ))}
-      </div>
+      </ul>
 
       {/* Banner - Responsive Layout */}
-      <motion.div
+      <motion.section
         initial={{ opacity: 0, x: 200 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ ease: "easeInOut", delay: 0.2 }}
         viewport={{ once: true }}
+        aria-label="Special offer banner"
         className="bg-black rounded-2xl flex items-center
                    h-[120px] mx-28 justify-between
                    max-[770px]:h-auto max-[770px]:mx-4 max-[770px]:flex-col max-[770px]:gap-8 max-[770px]:py-10"
       >
-        <div className="px-12 flex items-center space-x-6
-                        max-[770px]:px-8 max-[770px]:flex-col max-[770px]:space-x-0 max-[770px]:space-y-6 max-[770px]:text-center">
+        <div
+          className="px-12 flex items-center space-x-6
+                        max-[770px]:px-8 max-[770px]:flex-col max-[770px]:space-x-0 max-[770px]:space-y-6 max-[770px]:text-center"
+        >
           <img
             src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_logo.png?v=1702970691"
-            alt="KLARNA_LOGO"
+            alt="Klarna logo"
             className="w-16 h-auto max-[770px]:w-24 max-[770px]:h-auto"
+            loading="lazy"
           />
           <h2 className="uppercase text-white font-semibold
                          text-[36px] lg:text-[32px] md:text-[28px] max-[770px]:text-[24px]">
@@ -108,14 +125,17 @@ const CompanyFeatures = () => {
           </h2>
         </div>
         <div className="px-12 max-[770px]:px-8">
-          <button className="flex items-center text-lime-300 gap-2 border-[1px] px-4 py-3 border-lime-300 rounded-xl font-semibold hover:bg-lime-300 transition-colors hover:text-black text-[16px]
-                             max-[770px]:px-6 max-[770px]:py-4 max-[770px]:text-[14px]">
+          <button
+            className="flex items-center text-lime-300 gap-2 border-[1px] px-4 py-3 border-lime-300 rounded-xl font-semibold hover:bg-lime-300 transition-colors hover:text-black text-[16px]
+                             max-[770px]:px-6 max-[770px]:py-4 max-[770px]:text-[14px]"
+            aria-label="Make your order"
+          >
             <span>MAKE YOUR ORDER</span>
-            <IconChevronRight size={22} fontWeight={10} />
+            <IconChevronRight size={22} fontWeight={10} aria-hidden="true" />
           </button>
         </div>
-      </motion.div>
-    </div>
+      </motion.section>
+    </section>
   );
 };
 

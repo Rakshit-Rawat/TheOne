@@ -1,12 +1,12 @@
-import { useCart } from "../contexts/CartContext";
 import { ChevronUp, ChevronDown, Trash2, ArrowLeft } from "lucide-react";
 import { NavLink } from "react-router";
+import { useCart } from "../contexts/CartContext";
 
-type props = {
+type Props = {
   onProceedToPayment: () => void;
 };
 
-const ShoppingCart = ({ onProceedToPayment }: props) => {
+const ShoppingCart = ({ onProceedToPayment }: Props) => {
   const {
     cartItems,
     updateQuantity,
@@ -15,11 +15,10 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
     getTotalPrice,
   } = useCart();
 
-  // Calculate shipping (free shipping over $50, otherwise $7)
   const subtotal = getTotalPrice();
   const shipping = subtotal > 50 ? 0 : 7.0;
   const totalExcludingTax = subtotal + shipping;
-  const taxes = 0; // Assuming no tax for this example
+  const taxes = 0;
   const totalIncludingTax = totalExcludingTax + taxes;
 
   const handleQuantityChange = (
@@ -44,7 +43,10 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
         <div className="text-center py-20">
           <p className="text-gray-500 text-xl mb-8">Your cart is empty</p>
           <NavLink to="/" className="block w-full text-center py-3">
-            <button className="flex items-center text-gray-600 hover:text-gray-800 text-lg mx-auto">
+            <button
+              className="flex items-center text-gray-600 hover:text-gray-800 text-lg mx-auto"
+              aria-label="Continue shopping"
+            >
               <ArrowLeft className="w-5 h-5 mr-3" />
               CONTINUE SHOPPING
             </button>
@@ -63,13 +65,14 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
         <div className="lg:col-span-3 space-y-8">
           {cartItems.map((item) => {
             const originalPrice = parseFloat(item.price.replace("$", ""));
-            const discountedPrice = originalPrice * 0.8; // Assuming 20% discount for display
-            const isDiscounted = true; // You can add discount logic here
+            const discountedPrice = originalPrice * 0.8;
+            const isDiscounted = true;
 
             return (
               <div
                 key={`${item.id}-${item.size}-${item.color}`}
                 className="flex items-start gap-8 p-8 bg-white rounded-xl border border-gray-100 shadow-sm"
+                aria-labelledby={`product-${item.id}`}
               >
                 {/* Product Image */}
                 <div className="w-40 h-40 bg-gray-50 rounded-xl flex-shrink-0 overflow-hidden">
@@ -77,12 +80,16 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
                     src={item.image}
                     alt={item.name}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
 
                 {/* Product Details */}
                 <div className="flex-1 space-y-4">
-                  <h3 className="font-bold text-gray-900 text-lg uppercase tracking-wide">
+                  <h3
+                    id={`product-${item.id}`}
+                    className="font-bold text-gray-900 text-lg uppercase tracking-wide"
+                  >
                     {item.name}
                   </h3>
 
@@ -124,6 +131,7 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
                         )
                       }
                       className="px-4 py-3 hover:bg-gray-50 transition-colors"
+                      aria-label={`Increase quantity of ${item.name}`}
                     >
                       <ChevronUp className="w-5 h-5" />
                     </button>
@@ -140,6 +148,7 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
                         )
                       }
                       className="px-4 py-3 hover:bg-gray-50 transition-colors"
+                      aria-label={`Decrease quantity of ${item.name}`}
                     >
                       <ChevronDown className="w-5 h-5" />
                     </button>
@@ -157,6 +166,7 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
                     handleRemoveItem(item.id, item.size, item.color)
                   }
                   className="text-gray-400 hover:text-red-500 p-3 rounded-lg hover:bg-red-50 transition-colors"
+                  aria-label={`Remove ${item.name} from cart`}
                 >
                   <Trash2 className="w-6 h-6" />
                 </button>
@@ -200,6 +210,7 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
             <button
               onClick={onProceedToPayment}
               className="w-full bg-lime-300 hover:bg-black hover:text-lime-300 text-black font-bold py-4 px-6 rounded-xl text-lg uppercase tracking-wide transition-colors mt-8"
+              aria-label="Proceed to checkout"
             >
               PROCEED TO CHECKOUT
             </button>
@@ -209,7 +220,10 @@ const ShoppingCart = ({ onProceedToPayment }: props) => {
 
       {/* Continue Shopping */}
       <div className="mt-12 pt-8 border-t border-gray-200">
-        <button className="flex items-center text-gray-600 hover:text-gray-900 text-lg font-medium transition-colors">
+        <button
+          className="flex items-center text-gray-600 hover:text-gray-900 text-lg font-medium transition-colors"
+          aria-label="Continue shopping"
+        >
           <ArrowLeft className="w-5 h-5 mr-3" />
           CONTINUE SHOPPING
         </button>

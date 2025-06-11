@@ -139,7 +139,7 @@ const products: Product[] = [
 ];
 
 const Trending = () => {
-  const { cartItems, addToCart } = useCart(); // Use global cart context
+  const { cartItems, addToCart } = useCart();
   const [favorites, setFavorites] = useState(new Set());
   const [isDesktop, setIsDesktop] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(
@@ -148,17 +148,14 @@ const Trending = () => {
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Cart modal state
   const [showCartModal, setShowCartModal] = useState(false);
   const [addedItem, setAddedItem] = useState<any>(null);
 
-  // Modal state
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Handle screen size detection
   useEffect(() => {
     const checkScreenSize = () => {
       setIsDesktop(window.innerWidth >= 990);
@@ -171,18 +168,15 @@ const Trending = () => {
 
   const toggleFavorite = (id: number) => {
     const newFavorites = new Set(favorites);
-    if (newFavorites.has(id)) {
-      newFavorites.delete(id);
-    } else {
-      newFavorites.add(id);
-    }
+    newFavorites.has(id) ? newFavorites.delete(id) : newFavorites.add(id);
     setFavorites(newFavorites);
   };
 
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, index) => (
+  const renderStars = (rating: number) =>
+    Array.from({ length: 5 }, (_, index) => (
       <span
         key={index}
+        aria-hidden="true"
         className={`text-lg ${
           index < rating ? "text-gray-800" : "text-gray-300"
         }`}
@@ -190,18 +184,15 @@ const Trending = () => {
         ★
       </span>
     ));
-  };
 
-  // Handle direct add to cart from product grid
   const handleDirectAddToCart = (product: Product) => {
-    const size = product.sizes[0]; // Default to first size
-    const color = product.colors[0]; // Default to first color
+    const size = product.sizes[0];
+    const color = product.colors[0];
     const qty = 1;
 
     addToCart(product, size, color, qty);
 
-    // Show cart modal
-    const newCartItem = {
+    setAddedItem({
       id: product.id,
       name: product.name,
       price: product.price,
@@ -209,13 +200,11 @@ const Trending = () => {
       size,
       color,
       quantity: qty,
-    };
+    });
 
-    setAddedItem(newCartItem);
     setShowCartModal(true);
   };
 
-  // Dynamic animation variants based on screen size
   const buttonVariants = {
     leftButton: {
       hidden: isDesktop
@@ -283,17 +272,16 @@ const Trending = () => {
 
     addToCart(quickViewProduct, selectedSize, selectedColor, quantity);
 
-    const newCartItem = {
+    setAddedItem({
       id: quickViewProduct.id,
       name: quickViewProduct.name,
       price: quickViewProduct.price,
       image: quickViewProduct.image,
       size: selectedSize,
       color: selectedColor,
-      quantity: quantity,
-    };
+      quantity,
+    });
 
-    setAddedItem(newCartItem);
     setShowCartModal(true);
     closeModal();
   };
@@ -320,7 +308,6 @@ const Trending = () => {
   const handleProceedToCheckout = () => {
     setShowCartModal(false);
     setAddedItem(null);
-    // Navigate to checkout page
     console.log("Proceeding to checkout with items:", cartItems);
   };
 
@@ -331,22 +318,25 @@ const Trending = () => {
   });
 
   return (
-    <motion.section className="w-full overflow-hidden bg-gray-50 py-16 px-4">
-      {/* Trending Badge */}
+    <motion.section
+      className="w-full overflow-hidden bg-gray-50 py-16 px-4"
+      aria-labelledby="trending-heading"
+    >
       <div className="flex justify-center gap-6 mb-6">
         <span className="inline-block px-[12px] py-[2px] border-[1px] border-black rounded-full text-sm font-medium text-gray-600 bg-white uppercase">
           Trending
         </span>
       </div>
 
-      {/* Main Heading */}
       <div className="text-center mb-16">
-        <h2 className="text-6xl md:text-5xl font-bold text-gray-900 tracking-wider">
+        <h2
+          id="trending-heading"
+          className="text-6xl md:text-5xl font-bold text-gray-900 tracking-wider"
+        >
           HAND-PICKED ITEMS
         </h2>
       </div>
 
-      {/* Products Grid */}
       <motion.div
         ref={sectionRef}
         style={{ height: "auto", minHeight: "100vh" }}
@@ -359,117 +349,127 @@ const Trending = () => {
         className="max-w-7xl mx-auto"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product) => {
-            return (
-              <motion.div
-                key={product.id}
-                className="relative bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300 group overflow-hidden border-2 border-black"
-                initial="rest"
-                whileHover="hover"
-                animate="rest"
-              >
-                {/* Stars and Heart */}
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex">{renderStars(product.rating)}</div>
-                  <button
-                    onClick={() => toggleFavorite(product.id)}
-                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  >
-                    <IconHeart
-                      className={`w-5 h-5 ${
-                        favorites.has(product.id)
-                          ? "fill-red-500 text-red-500"
-                          : "text-gray-400"
-                      }`}
-                    />
-                  </button>
+          {products.map((product) => (
+            <motion.article
+              key={product.id}
+              className="relative bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300 group overflow-hidden border-2 border-black"
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+              aria-label={product.name}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <div
+                  className="flex"
+                  aria-label={`Rating: ${product.rating} out of 5 stars`}
+                >
+                  {renderStars(product.rating)}
+                </div>
+                <button
+                  onClick={() => toggleFavorite(product.id)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-pressed={favorites.has(product.id)}
+                  aria-label={
+                    favorites.has(product.id)
+                      ? "Remove from favorites"
+                      : "Add to favorites"
+                  }
+                >
+                  <IconHeart
+                    className={`w-5 h-5 ${
+                      favorites.has(product.id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-400"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="mb-6 overflow-hidden rounded-xl relative">
+                <div className="aspect-square bg-gray-100 flex items-center justify-center">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    loading="lazy"
+                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  />
                 </div>
 
-                {/* Image */}
-                <div className="mb-6 overflow-hidden rounded-xl relative">
-                  <div className="aspect-square bg-gray-100 flex items-center justify-center">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-                    />
+                {isDesktop ? (
+                  <>
+                    <motion.button
+                      variants={{
+                        rest: buttonVariants.leftButton.hidden,
+                        hover: buttonVariants.leftButton.visible,
+                      }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="absolute top-[50px] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                      onClick={() => handleDirectAddToCart(product)}
+                      aria-label="Add to cart"
+                    >
+                      Add to Cart
+                    </motion.button>
+
+                    <motion.button
+                      variants={{
+                        rest: buttonVariants.rightButton.hidden,
+                        hover: buttonVariants.rightButton.visible,
+                      }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="absolute top-[90px] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
+                      onClick={() => handleQuickView(product)}
+                      aria-label="Quick view product"
+                    >
+                      Quick View
+                    </motion.button>
+                  </>
+                ) : (
+                  <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-6">
+                    <button
+                      className="bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
+                      onClick={() => handleDirectAddToCart(product)}
+                      aria-label="Add to cart"
+                    >
+                      Add to Cart
+                    </button>
+
+                    <button
+                      className="bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
+                      onClick={() => handleQuickView(product)}
+                      aria-label="Quick view product"
+                    >
+                      Quick View
+                    </button>
                   </div>
+                )}
+              </div>
 
-                  {/* Desktop Buttons (>=990px) - Slide in from sides */}
-                  {isDesktop && (
-                    <>
-                      <motion.button
-                        variants={{
-                          rest: buttonVariants.leftButton.hidden,
-                          hover: buttonVariants.leftButton.visible,
-                        }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="absolute top-[50px] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
-                        onClick={() => handleDirectAddToCart(product)}
-                      >
-                        Add to Cart
-                      </motion.button>
-
-                      <motion.button
-                        variants={{
-                          rest: buttonVariants.rightButton.hidden,
-                          hover: buttonVariants.rightButton.visible,
-                        }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="absolute top-[90px] left-[50%] -translate-x-1/2 bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-10 min-w-[120px] text-base hover:bg-lime-300 hover:text-black transition-colors"
-                        onClick={() => handleQuickView(product)}
-                      >
-                        Quick View
-                      </motion.button>
-                    </>
-                  )}
-
-                  {/* Mobile Buttons (<990px) - Static positioning */}
-                  {!isDesktop && (
-                    <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 flex flex-col items-center gap-6">
-                      <button
-                        className="bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
-                        onClick={() => handleDirectAddToCart(product)}
-                      >
-                        Add to Cart
-                      </button>
-
-                      <button
-                        className="bg-white text-gray-800 font-semibold rounded-full shadow-md flex items-center justify-center h-14 min-w-[200px] text-xl hover:bg-lime-300 hover:text-black transition-colors"
-                        onClick={() => handleQuickView(product)}
-                      >
-                        Quick View
-                      </button>
-                    </div>
-                  )}
+              <div className="text-center">
+                <h3 className="font-semibold text-gray-900 text-sm mb-2 uppercase tracking-wide">
+                  {product.name}
+                </h3>
+                <p className="text-xl font-bold text-gray-900 mb-4">
+                  {product.price}
+                </p>
+                <div
+                  className="flex justify-center space-x-2"
+                  role="list"
+                  aria-label="Color options"
+                >
+                  {product.colors.map((color, index) => (
+                    <button
+                      key={index}
+                      style={{ backgroundColor: color }}
+                      className="w-4 h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
+                      aria-label={getColorName(color)}
+                    />
+                  ))}
                 </div>
-
-                {/* Product Info */}
-                <div className="text-center">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-2 uppercase tracking-wide">
-                    {product.name}
-                  </h3>
-                  <p className="text-xl font-bold text-gray-900 mb-4">
-                    {product.price}
-                  </p>
-
-                  {/* Color Swatches */}
-                  <div className="flex justify-center space-x-2">
-                    {product.colors.map((color, index) => (
-                      <button
-                        key={index}
-                        className="w-4 h-4 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.article>
+          ))}
         </div>
 
-        {/* Quick View Modal */}
         {showModal && (
           <QuickViewModal
             product={quickViewProduct}
@@ -491,7 +491,6 @@ const Trending = () => {
           />
         )}
 
-        {/* Add to Cart Modal */}
         <AddToCartModal
           isOpen={showCartModal}
           onClose={() => setShowCartModal(false)}

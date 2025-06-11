@@ -52,7 +52,7 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
       "#78716c": "Brown",
       "#9ca3af": "Light Gray",
     };
-    return colorMap[hex] || hex;
+    return colorMap[hex.toLowerCase()] ?? "Unknown color";
   };
 
   return (
@@ -64,6 +64,11 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
           onClick={onClose}
+          aria-modal="true"
+          role="dialog"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+          tabIndex={-1}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -74,27 +79,31 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-gray-800 text-white px-6 py-4 flex items-center justify-between">
+            <header className="bg-gray-800 text-white px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="bg-green-500 rounded-full p-1">
                   <Check className="w-4 h-4" />
                 </div>
-                <span className="font-semibold text-lg">
-                  PRODUCT SUCCESSFULLY ADDED TO YOUR SHOPPING CART
-                </span>
+                <h2
+                  id="modal-title"
+                  className="font-semibold text-lg"
+                >
+                  Product Successfully Added To Your Shopping Cart
+                </h2>
               </div>
               <button
                 onClick={onClose}
                 className="text-white hover:text-gray-300 transition-colors p-1"
+                aria-label="Close modal"
               >
                 <X className="w-6 h-6" />
               </button>
-            </div>
+            </header>
 
-            <div className="p-6">
+            <main id="modal-description" className="p-6 overflow-auto">
               <div className="grid md:grid-cols-2 gap-8">
                 {/* Left Side - Added Product */}
-                <div className="space-y-6">
+                <section className="space-y-6" aria-live="polite">
                   {addedItem && (
                     <div className="flex gap-4">
                       <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
@@ -114,9 +123,7 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                         <div className="space-y-1 text-gray-600">
                           <div>
                             Size:{" "}
-                            <span className="font-medium">
-                              {addedItem.size}
-                            </span>
+                            <span className="font-medium">{addedItem.size}</span>
                           </div>
                           <div>
                             Color:{" "}
@@ -126,43 +133,36 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                           </div>
                           <div>
                             Quantity:{" "}
-                            <span className="font-medium">
-                              {addedItem.quantity}
-                            </span>
+                            <span className="font-medium">{addedItem.quantity}</span>
                           </div>
                         </div>
                       </div>
                     </div>
                   )}
-                </div>
+                </section>
 
                 {/* Right Side - Cart Summary */}
-                <div className="space-y-6">
+                <section className="space-y-6">
                   <div className="bg-gray-50 rounded-xl p-6">
                     <h4 className="font-bold text-lg text-gray-900 mb-4 uppercase tracking-wide">
-                      THERE ARE {cartItems.length} ITEMS IN YOUR CART.
+                      There are {cartItems.length} item
+                      {cartItems.length !== 1 ? "s" : ""} in your cart.
                     </h4>
 
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-gray-600">
+                    <div className="space-y-3 text-gray-600">
+                      <div className="flex justify-between items-center">
                         <span>Subtotal:</span>
-                        <span className="font-semibold">
-                          ${subtotal.toFixed(2)}
-                        </span>
+                        <span className="font-semibold">${subtotal.toFixed(2)}</span>
                       </div>
 
-                      <div className="flex justify-between items-center text-gray-600">
+                      <div className="flex justify-between items-center">
                         <span>Shipping:</span>
-                        <span className="font-semibold">
-                          ${shipping.toFixed(2)}
-                        </span>
+                        <span className="font-semibold">${shipping.toFixed(2)}</span>
                       </div>
 
-                      <div className="flex justify-between items-center text-gray-600">
+                      <div className="flex justify-between items-center">
                         <span>Total (tax excl.):</span>
-                        <span className="font-semibold">
-                          ${totalExcl.toFixed(2)}
-                        </span>
+                        <span className="font-semibold">${totalExcl.toFixed(2)}</span>
                       </div>
 
                       <div className="flex justify-between items-center text-gray-900 text-lg font-bold border-t pt-3">
@@ -170,11 +170,9 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                         <span>${totalIncl.toFixed(2)}</span>
                       </div>
 
-                      <div className="flex justify-between items-center text-gray-600">
+                      <div className="flex justify-between items-center">
                         <span>Taxes:</span>
-                        <span className="font-semibold">
-                          ${taxes.toFixed(2)}
-                        </span>
+                        <span className="font-semibold">${taxes.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
@@ -185,21 +183,21 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({
                       onClick={onContinueShopping}
                       className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition-colors uppercase tracking-wide"
                     >
-                      CONTINUE SHOPPING
+                      Continue Shopping
                     </button>
-                    <NavLink to="/checkout">
-                      <button
-                        onClick={onProceedToCheckout}
-                        className="flex-1 px-6 py-3 bg-lime-400 text-gray-900 font-semibold rounded-lg hover:bg-lime-500 transition-colors uppercase tracking-wide flex items-center justify-center gap-2"
-                      >
-                        <Check className="w-5 h-5" />
-                        Procceed To Checkout
-                      </button>
+
+                    <NavLink
+                      to="/checkout"
+                      onClick={onProceedToCheckout}
+                      className="flex-1 px-6 py-3 bg-lime-400 text-gray-900 font-semibold rounded-lg hover:bg-lime-500 transition-colors uppercase tracking-wide flex items-center justify-center gap-2 text-center"
+                    >
+                      <Check className="w-5 h-5" />
+                      Proceed To Checkout
                     </NavLink>
                   </div>
-                </div>
+                </section>
               </div>
-            </div>
+            </main>
           </motion.div>
         </motion.div>
       )}

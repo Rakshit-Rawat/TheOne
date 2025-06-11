@@ -64,7 +64,9 @@ const socialLinks: Item[] = [
 
 const Touch = () => {
   return (
-    <div className="bg-footer w-full h-[222px] flex justify-between items-center p-20  tablet_touch:flex-row " >
+    <div
+      className="bg-footer w-full h-[222px] flex justify-between items-center p-20 tablet_touch:flex-row"
+    >
       {/* Left */}
       <div className="flex items-center gap-4 flex-wrap">
         <h2 className="text-3xl font-semibold leading-[30px] whitespace-nowrap pr-10">
@@ -75,7 +77,7 @@ const Touch = () => {
           <a
             key={idx}
             href={item.href}
-            className="flex items-center gap-1 px-4 py-2 bg-white text-neutral-700 shadow-sm hover:bg-black hover:text-white rounded-full transition font-inter text-[14px] "
+            className="flex items-center gap-1 px-4 py-2 bg-white text-neutral-700 shadow-sm hover:bg-black hover:text-white rounded-full transition font-inter text-[14px]"
           >
             <span>{item.icon}</span>
             <span>{item.text}</span>
@@ -89,11 +91,13 @@ const Touch = () => {
           <a
             key={idx}
             href={item.href}
-            className="p-[14px] bg-white border-[1px] rounded-xl border-black hover:bg-neutral-800  hover:text-lime-300 transition-colors"
+            aria-label={item.text}
+            title={item.text}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-[14px] bg-white border-[1px] rounded-xl border-black hover:bg-neutral-800 hover:text-lime-300 transition-colors"
           >
-            <span className="transition-all duration-300">
-              {item.icon}
-            </span>
+            <span className="transition-all duration-300">{item.icon}</span>
           </a>
         ))}
       </div>

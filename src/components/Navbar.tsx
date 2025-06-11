@@ -5,11 +5,11 @@ import {
   IconSearch,
   IconMenu2,
 } from "@tabler/icons-react";
-import Logo from "../../public/TheOne..png";
+import Logo from "../assets/TheOne..png";
 import cn from "clsx";
-import { useCart } from "../contexts/CartContext"; // Import the useCart hook
+import { useCart } from "../contexts/CartContext";
 
-type navItems = {
+type NavItem = {
   name: string;
   href: string;
   submenu?: string[];
@@ -27,11 +27,10 @@ export default function Navbar({ className, noMarginLeft }: NavbarProps) {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Use the cart context to get total items
   const { getTotalItems } = useCart();
   const totalCartItems = getTotalItems();
 
-  const navItems: navItems[] = [
+  const navItems: NavItem[] = [
     { name: "Home", href: "#" },
     {
       name: "Shop",
@@ -63,7 +62,7 @@ export default function Navbar({ className, noMarginLeft }: NavbarProps) {
           </a>
         </div>
 
-        {/* Desktop Nav */}
+        {/* Desktop Navigation */}
         <nav className="justify-center w-full hidden tablet:flex relative">
           <div className="w-full max-w-5xl">
             <div className="px-4 py-2 flex items-center justify-center">
@@ -109,8 +108,9 @@ export default function Navbar({ className, noMarginLeft }: NavbarProps) {
           </div>
         </nav>
 
-        {/* Search + Cart + Mobile Menu Toggle */}
+        {/* Search, Cart & Mobile Menu Toggle */}
         <div className="flex items-center space-x-4 flex-shrink-0 px-6">
+          {/* Desktop Search Input */}
           <form
             action="/"
             method="get"
@@ -130,11 +130,12 @@ export default function Navbar({ className, noMarginLeft }: NavbarProps) {
           <button
             className="block mobile:hidden"
             onClick={() => setIsSearchVisible(!isSearchVisible)}
+            aria-label="Toggle search"
           >
             <IconSearch className="text-white w-5 h-5" />
           </button>
 
-          {/* Mobile Search Input */}
+          {/* Mobile Search Input with Animation */}
           <AnimatePresence>
             {isSearchVisible && (
               <motion.div
@@ -156,23 +157,28 @@ export default function Navbar({ className, noMarginLeft }: NavbarProps) {
             )}
           </AnimatePresence>
 
-          {/* Cart */}
-          <div className="text-white cursor-pointer relative">
+          {/* Shopping Cart Icon and Count */}
+          <div className="text-white cursor-pointer relative" aria-label="Shopping cart">
             <div className="w-8 h-8 rounded flex items-center justify-center">
               <IconShoppingCart />
             </div>
-            {/* Updated to show actual cart item count with conditional rendering */}
             {totalCartItems > 0 && (
               <span className="absolute -top-1 -right-1 bg-lime-400 text-black rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold">
-                {totalCartItems > 99 ? '99+' : totalCartItems}
+                {totalCartItems > 99 ? "99+" : totalCartItems}
               </span>
             )}
           </div>
 
-          {/* Hamburger Icon */}
+          {/* Mobile Menu Toggle */}
           <div
-            className="block tablet:hidden p-2 bg-lime-300 rounded-lg"
+            className="block tablet:hidden p-2 bg-lime-300 rounded-lg cursor-pointer"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            role="button"
+            aria-label="Toggle mobile menu"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") setIsMobileMenuOpen(!isMobileMenuOpen);
+            }}
           >
             <IconMenu2 size={20} />
           </div>

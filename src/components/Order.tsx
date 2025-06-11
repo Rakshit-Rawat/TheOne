@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Eye, EyeOff, CreditCard, Truck } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 
@@ -24,11 +24,9 @@ const Order = () => {
     cardName: "",
   });
 
-  
-
-
   const subtotal = 29.0;
-  const getShippingCost = () => {
+
+  const shipping = useMemo(() => {
     switch (formData.shippingMethod) {
       case "express":
         return 15.0;
@@ -37,22 +35,35 @@ const Order = () => {
       default:
         return 7.0;
     }
-  };
-  const shipping = getShippingCost();
+  }, [formData.shippingMethod]);
+
   const taxes = subtotal * 0.08; // 8% tax
   const total = subtotal + shipping + taxes;
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    },
+    []
+  );
 
-  const validateStep = () => {
+  // Keyboard handler for custom radio divs for accessibility
+  const handleKeyDown = useCallback(
+    (
+      e: React.KeyboardEvent<HTMLDivElement>,
+      value: string,
+      name: "shippingMethod" | "paymentMethod"
+    ) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    },
+    []
+  );
+
+  const validateStep = useCallback(() => {
     switch (currentStep) {
       case 1:
         if (!formData.email) return false;
@@ -68,7 +79,7 @@ const Order = () => {
           formData.country
         );
       case 3:
-        return formData.shippingMethod;
+        return !!formData.shippingMethod;
       case 4:
         if (formData.paymentMethod === "card") {
           return (
@@ -82,36 +93,43 @@ const Order = () => {
       default:
         return true;
     }
-  };
+  }, [currentStep, formData, isGuest]);
 
-  const handleContinue = () => {
+  const handleContinue = useCallback(() => {
     if (!validateStep()) {
       alert("Please fill in all required fields");
       return;
     }
-
     if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
+      setCurrentStep((step) => step + 1);
     } else {
       // Place order
       alert("Order placed successfully!");
     }
-  };
+  }, [currentStep, validateStep]);
 
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
+  const handleBack = useCallback(() => {
+    setCurrentStep((step) => Math.max(step - 1, 1));
+  }, []);
+
+  const stepTitles = [
+    "Personal Information",
+    "Shipping Address",
+    "Shipping Method",
+    "Payment",
+  ];
 
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-6">
-            <div className="flex gap-4 mb-6">
+          <fieldset>
+            <legend className="sr-only">Choose order type</legend>
+            <div className="flex gap-4 mb-6" role="radiogroup" aria-label="Order type">
               <button
+                type="button"
                 onClick={() => setIsGuest(true)}
+                aria-pressed={isGuest}
                 className={`pb-2 border-b-2 transition-colors ${
                   isGuest
                     ? "border-lime-400 text-gray-900 font-medium"
@@ -121,7 +139,9 @@ const Order = () => {
                 Order as a guest
               </button>
               <button
+                type="button"
                 onClick={() => setIsGuest(false)}
+                aria-pressed={!isGuest}
                 className={`pb-2 border-b-2 transition-colors ${
                   !isGuest
                     ? "border-lime-400 text-gray-900 font-medium"
@@ -133,10 +153,11 @@ const Order = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email *
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email <span aria-hidden="true">*</span>
               </label>
               <input
+                id="email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -144,15 +165,18 @@ const Order = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                 placeholder="Enter your email"
                 required
+                aria-required="true"
+                autoComplete="email"
               />
             </div>
 
             {!isGuest && (
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Password *
+              <div className="relative mt-6">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Password <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
@@ -160,68 +184,75 @@ const Order = () => {
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                   placeholder="Enter your password"
                   required
+                  aria-required="true"
+                  autoComplete="current-password"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassword((v) => !v)}
                   className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             )}
 
             {!isGuest && (
-              <div className="text-right">
-                <button className="text-lime-600 hover:text-lime-700 text-sm">
+              <div className="text-right mt-2">
+                <button type="button" className="text-lime-600 hover:text-lime-700 text-sm">
                   Forgot your password?
                 </button>
               </div>
             )}
-          </div>
+          </fieldset>
         );
 
       case 2:
         return (
-          <div className="space-y-6">
+          <fieldset>
+            <legend className="sr-only">Shipping Address Information</legend>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  First Name *
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                  First Name <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="firstName"
                   type="text"
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                   required
+                  aria-required="true"
+                  autoComplete="given-name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name *
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                  Last Name <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="lastName"
                   type="text"
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                   required
+                  aria-required="true"
+                  autoComplete="family-name"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address *
+            <div className="mt-4">
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+                Address <span aria-hidden="true">*</span>
               </label>
               <input
+                id="address"
                 type="text"
                 name="address"
                 value={formData.address}
@@ -229,48 +260,59 @@ const Order = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                 placeholder="Street address"
                 required
+                aria-required="true"
+                autoComplete="street-address"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  City *
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                  City <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="city"
                   type="text"
                   name="city"
                   value={formData.city}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                   required
+                  aria-required="true"
+                  autoComplete="address-level2"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Postal Code *
+                <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700 mb-2">
+                  Postal Code <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="postalCode"
                   type="text"
                   name="postalCode"
                   value={formData.postalCode}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                   required
+                  aria-required="true"
+                  autoComplete="postal-code"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Country *
+            <div className="mt-4">
+              <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
+                Country <span aria-hidden="true">*</span>
               </label>
               <select
+                id="country"
                 name="country"
                 value={formData.country}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                 required
+                aria-required="true"
+                autoComplete="country-name"
               >
                 <option value="">Select Country</option>
                 <option value="US">United States</option>
@@ -282,152 +324,114 @@ const Order = () => {
                 <option value="JP">Japan</option>
               </select>
             </div>
-          </div>
+          </fieldset>
         );
 
       case 3:
         return (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div
-                className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                  formData.shippingMethod === "standard"
-                    ? "border-lime-400 bg-lime-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-                onClick={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    shippingMethod: "standard",
-                  }))
-                }
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Truck className="w-5 h-5 text-gray-600" />
-                    <div>
-                      <h4 className="font-medium">Standard Shipping</h4>
-                      <p className="text-sm text-gray-500">5-7 business days</p>
-                    </div>
-                  </div>
-                  <span className="font-semibold">$7.00</span>
+          <fieldset>
+            <legend className="text-lg font-semibold mb-4">Select Shipping Method</legend>
+            <div role="radiogroup" aria-label="Shipping method" className="space-y-4">
+              {[
+                {
+                  value: "standard",
+                  label: "Standard Shipping (7-10 days) - $7",
+                  icon: <Truck className="w-6 h-6" />,
+                  cost: 7,
+                },
+                {
+                  value: "express",
+                  label: "Express Shipping (3-5 days) - $15",
+                  icon: <Truck className="w-6 h-6" />,
+                  cost: 15,
+                },
+                {
+                  value: "overnight",
+                  label: "Overnight Shipping (1-2 days) - $25",
+                  icon: <Truck className="w-6 h-6" />,
+                  cost: 25,
+                },
+              ].map(({ value, label, icon }) => (
+                <div
+                  key={value}
+                  role="radio"
+                  tabIndex={0}
+                  aria-checked={formData.shippingMethod === value}
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, shippingMethod: value }))
+                  }
+                  onKeyDown={(e) => handleKeyDown(e, value, "shippingMethod")}
+                  className={`flex items-center gap-4 p-4 border rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-lime-400 ${
+                    formData.shippingMethod === value
+                      ? "bg-lime-100 border-lime-400"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <span className="text-lime-500">{icon}</span>
+                  <span className="text-gray-700">{label}</span>
                 </div>
-              </div>
-
-              <div
-                className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                  formData.shippingMethod === "express"
-                    ? "border-lime-400 bg-lime-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-                onClick={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    shippingMethod: "express",
-                  }))
-                }
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Truck className="w-5 h-5 text-gray-600" />
-                    <div>
-                      <h4 className="font-medium">Express Shipping</h4>
-                      <p className="text-sm text-gray-500">2-3 business days</p>
-                    </div>
-                  </div>
-                  <span className="font-semibold">$15.00</span>
-                </div>
-              </div>
-
-              <div
-                className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                  formData.shippingMethod === "overnight"
-                    ? "border-lime-400 bg-lime-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-                onClick={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    shippingMethod: "overnight",
-                  }))
-                }
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Truck className="w-5 h-5 text-gray-600" />
-                    <div>
-                      <h4 className="font-medium">Overnight Shipping</h4>
-                      <p className="text-sm text-gray-500">Next business day</p>
-                    </div>
-                  </div>
-                  <span className="font-semibold">$25.00</span>
-                </div>
-              </div>
+              ))}
             </div>
-          </div>
+          </fieldset>
         );
 
       case 4:
         return (
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <div
-                className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                  formData.paymentMethod === "card"
-                    ? "border-lime-400 bg-lime-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, paymentMethod: "card" }))
-                }
-              >
-                <div className="flex items-center gap-3">
-                  <CreditCard className="w-5 h-5 text-gray-600" />
-                  <span className="font-medium">Credit/Debit Card</span>
+          <fieldset>
+            <legend className="text-lg font-semibold mb-4">Payment Method</legend>
+            <div role="radiogroup" aria-label="Payment method" className="flex gap-6 mb-6">
+              {[
+                {
+                  value: "card",
+                  label: (
+                    <>
+                      <CreditCard className="inline w-5 h-5 mr-2" />
+                      Credit Card
+                    </>
+                  ),
+                },
+                {
+                  value: "paypal",
+                  label: (
+                    <>
+                      <img
+                        src="/images/paypal.svg"
+                        alt="PayPal"
+                        className="inline h-6"
+                      />
+                      PayPal
+                    </>
+                  ),
+                },
+              ].map(({ value, label }) => (
+                <div
+                  key={value}
+                  role="radio"
+                  tabIndex={0}
+                  aria-checked={formData.paymentMethod === value}
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, paymentMethod: value }))
+                  }
+                  onKeyDown={(e) => handleKeyDown(e, value, "paymentMethod")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded cursor-pointer border ${
+                    formData.paymentMethod === value
+                      ? "border-lime-400 bg-lime-100"
+                      : "border-gray-300"
+                  }`}
+                >
+                  {label}
                 </div>
-              </div>
-
-              <div
-                className={`border-2 rounded-lg p-4 cursor-pointer transition-colors ${
-                  formData.paymentMethod === "paypal"
-                    ? "border-lime-400 bg-lime-50"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, paymentMethod: "paypal" }))
-                }
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 bg-blue-600 rounded-sm flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">P</span>
-                  </div>
-                  <span className="font-medium">PayPal</span>
-                </div>
-              </div>
+              ))}
             </div>
 
             {formData.paymentMethod === "card" && (
-              <div className="space-y-4 mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cardholder Name *
+                  <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                    Card Number <span aria-hidden="true">*</span>
                   </label>
                   <input
-                    type="text"
-                    name="cardName"
-                    value={formData.cardName}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
-                    placeholder="Name on card"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Card Number *
-                  </label>
-                  <input
+                    id="cardNumber"
                     type="text"
                     name="cardNumber"
                     value={formData.cardNumber}
@@ -435,42 +439,71 @@ const Order = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
                     placeholder="1234 5678 9012 3456"
                     required
+                    aria-required="true"
+                    autoComplete="cc-number"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Expiry Date *
-                    </label>
-                    <input
-                      type="text"
-                      name="expiryDate"
-                      value={formData.expiryDate}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
-                      placeholder="MM/YY"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      CVV *
-                    </label>
-                    <input
-                      type="text"
-                      name="cvv"
-                      value={formData.cvv}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
-                      placeholder="123"
-                      required
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="expiryDate" className="block text-sm font-medium text-gray-700 mb-2">
+                    Expiry Date <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="expiryDate"
+                    type="text"
+                    name="expiryDate"
+                    value={formData.expiryDate}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
+                    placeholder="MM/YY"
+                    required
+                    aria-required="true"
+                    autoComplete="cc-exp"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="cvv" className="block text-sm font-medium text-gray-700 mb-2">
+                    CVV <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="cvv"
+                    type="text"
+                    name="cvv"
+                    value={formData.cvv}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
+                    placeholder="123"
+                    required
+                    aria-required="true"
+                    autoComplete="cc-csc"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="cardName" className="block text-sm font-medium text-gray-700 mb-2">
+                    Name on Card <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="cardName"
+                    type="text"
+                    name="cardName"
+                    value={formData.cardName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-400 focus:border-transparent"
+                    placeholder="John Doe"
+                    required
+                    aria-required="true"
+                    autoComplete="cc-name"
+                  />
                 </div>
               </div>
             )}
-          </div>
+
+            {formData.paymentMethod === "paypal" && (
+              <p className="text-gray-700">You will be redirected to PayPal to complete your purchase.</p>
+            )}
+          </fieldset>
         );
 
       default:
@@ -478,131 +511,108 @@ const Order = () => {
     }
   };
 
-  const stepTitles = [
-    "PERSONAL INFORMATION",
-    "SHIPPING ADDRESS",
-    "SHIPPING METHOD",
-    "PAYMENT",
-  ];
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-        {/* Form Section */}
-        <div className="lg:col-span-2">
-          <div className="space-y-8">
-            {stepTitles.map((title, index) => {
-              const stepNumber = index + 1;
-              const isActive = currentStep === stepNumber;
-              const isCompleted = currentStep > stepNumber;
+    <section aria-labelledby="order-heading" className="max-w-4xl mx-auto p-4">
+      <h1 id="order-heading" className="text-2xl font-bold mb-6">
+        Checkout
+      </h1>
 
-              return (
-                <div key={stepNumber} className="border-b border-gray-200 pb-8">
-                  <div className="flex items-center mb-6">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 ${
-                        isCompleted
-                          ? "bg-lime-400 text-white"
-                          : isActive
-                          ? "bg-gray-900 text-white"
-                          : "bg-gray-200 text-gray-500"
-                      }`}
-                    >
-                      {isCompleted ? "✓" : stepNumber}
-                    </div>
-                    <h2
-                      className={`text-lg font-bold uppercase tracking-wide ${
-                        isActive
-                          ? "text-gray-900"
-                          : isCompleted
-                          ? "text-lime-600"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {title}
-                    </h2>
-                  </div>
-
-                  {isActive && (
-                    <div className="ml-12">{renderStepContent()}</div>
-                  )}
-                </div>
-              );
-            })}
-
-            <div className="flex justify-between items-center mt-8">
-              <button
-                onClick={handleBack}
-                disabled={currentStep === 1}
-                className={`px-6 py-3 border rounded-lg transition-colors ${
-                  currentStep === 1
-                    ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
+      <nav aria-label="Progress">
+        <ol className="flex gap-4 mb-8">
+          {stepTitles.map((title, i) => {
+            const step = i + 1;
+            const isActive = currentStep === step;
+            const isCompleted = currentStep > step;
+            return (
+              <li
+                key={step}
+                aria-current={isActive ? "step" : undefined}
+                className={`relative flex-1 pb-2 border-b-2 ${
+                  isActive
+                    ? "border-lime-400 font-semibold text-lime-600"
+                    : isCompleted
+                    ? "border-lime-200 text-gray-600"
+                    : "border-gray-300 text-gray-400"
                 }`}
               >
-                Back
-              </button>
-              <button
-                onClick={handleContinue}
-                className="px-8 py-3 bg-lime-300 text-white rounded-lg hover:bg-gray-800 hover:text-lime-300 transition-colors"
-              >
-                {currentStep === 4 ? "Place Order" : "Continue"}
-              </button>
-            </div>
-          </div>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(step)}
+                  className="w-full text-left"
+                  aria-disabled={step > currentStep}
+                  disabled={step > currentStep}
+                >
+                  {title}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleContinue();
+        }}
+        noValidate
+      >
+        {renderStepContent()}
+
+        <div className="mt-8 flex justify-between">
+          <button
+            type="button"
+            onClick={handleBack}
+            disabled={currentStep === 1}
+            className={`px-6 py-3 rounded-lg border ${
+              currentStep === 1
+                ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                : "border-lime-400 text-lime-600 hover:bg-lime-100"
+            }`}
+          >
+            Back
+          </button>
+
+          <button
+            type="submit"
+            className="px-6 py-3 rounded-lg bg-lime-600 text-white hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-400"
+          >
+            {currentStep === 4 ? "Place Order" : "Continue"}
+          </button>
         </div>
+      </form>
 
-        {/* Sidebar Cart */}
-        <div className="bg-gray-50 p-6 rounded-lg h-fit">
-          <h3 className="text-xl font-semibold mb-6">Order Summary</h3>
-
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-start gap-4 py-4 border-b border-gray-200"
-            >
-              <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 text-xs">IMG</span>
-              </div>
-              <div className="flex-1">
-                <h4 className="font-medium text-sm leading-tight">
-                  {item.name}
-                </h4>
-                <div className="text-xs text-gray-500 mt-1 space-y-1">
-                  <p>Qty: {item.quantity}</p>
-                  <p>Size: {item.size}</p>
-                  <p>Color: {item.color}</p>
-                </div>
-              </div>
-              <div className="text-right font-semibold">
-                ${item.price}
-              </div>
-            </div>
+      <aside aria-label="Order summary" className="mt-12 p-4 border rounded-lg bg-gray-50">
+        <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+        <ul className="space-y-2 mb-4">
+          {cartItems.map(({ id, name, quantity, price }) => (
+            <li key={id} className="flex justify-between text-gray-700">
+              <span>{name} x{quantity}</span>
+              <span>${(Number(price) * quantity).toFixed(2)}</span>
+            </li>
           ))}
-
-          <div className="space-y-3 mt-6">
-            <div className="flex justify-between text-sm">
-              <span>Subtotal:</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Shipping:</span>
-              <span>${shipping.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span>Taxes:</span>
-              <span>${taxes.toFixed(2)}</span>
-            </div>
-            <div className="border-t border-gray-200 pt-3">
-              <div className="flex justify-between text-lg font-semibold">
-                <span>Total:</span>
-                <span>${total.toFixed(2)}</span>
-              </div>
-            </div>
+        </ul>
+        <hr className="my-4" />
+        <dl className="space-y-2 text-gray-700">
+          <div className="flex justify-between">
+            <dt>Subtotal:</dt>
+            <dd>${subtotal.toFixed(2)}</dd>
           </div>
-        </div>
-      </div>
-    </div>
+          <div className="flex justify-between">
+            <dt>Shipping:</dt>
+            <dd>${shipping.toFixed(2)}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt>Taxes:</dt>
+            <dd>${taxes.toFixed(2)}</dd>
+          </div>
+          <div className="flex justify-between font-bold text-lg">
+            <dt>Total:</dt>
+            <dd>${total.toFixed(2)}</dd>
+          </div>
+        </dl>
+      </aside>
+    </section>
   );
 };
 

@@ -7,15 +7,14 @@ const Pictures = () => {
       <div className="hidden md:block h-full">
         <div className="relative w-full h-full flex justify-between items-center">
           {/* Left Column */}
-          <div className="w-1/2 flex flex-col justify-center items-center p-4">
-            <div className="w-full relative">
-              <img
-                src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_image_1.jpg?v=1702967614"
-                alt="Image 1"
-                className="w-full h-auto object-cover rounded-lg"
-              />
-            </div>
-            <div className="w-full flex justify-center">
+          <figure className="w-1/2 flex flex-col justify-center items-center p-4">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_image_1.jpg?v=1702967614"
+              alt="Man wearing outdoor jacket standing on rocky mountain cliff"
+              className="w-full h-auto object-cover rounded-lg"
+              loading="lazy"
+            />
+            <figcaption className="w-full flex justify-center mt-4">
               <CurvedTextCircle
                 text="TRUSTED BRAND SINCE 1990"
                 speed={3}
@@ -23,38 +22,42 @@ const Pictures = () => {
                 fontSize={26}
                 letterSpacing={10}
                 wordSpacing={40}
+                aria-label="Trusted brand since 1990"
               />
-            </div>
-          </div>
+            </figcaption>
+          </figure>
 
           {/* Right Column */}
-          <div className="w-1/2 flex justify-center items-center p-4">
+          <figure className="w-1/2 flex justify-center items-center p-4">
             <img
               src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_image_2.jpg?v=1702967614"
-              alt="Image 2"
+              alt="Close-up of high-quality outdoor jacket fabric with snow background"
               className="w-full h-auto object-cover rounded-lg"
+              loading="lazy"
             />
-          </div>
+          </figure>
         </div>
       </div>
 
       {/* Mobile Layout */}
       <div className="block md:hidden px-4 py-8 space-y-8">
-        <div>
+        <figure>
           <img
             src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_image_1.jpg?v=1702967614"
-            alt="Image 1"
+            alt="Man wearing outdoor jacket standing on rocky mountain cliff"
             className="w-full h-auto object-cover rounded-lg"
+            loading="lazy"
           />
-        </div>
-        <div>
+        </figure>
+        <figure>
           <img
             src="https://cdn.shopify.com/s/files/1/0577/9675/5633/files/leo_daone_home1_image_2.jpg?v=1702967614"
-            alt="Image 2"
+            alt="Close-up of high-quality outdoor jacket fabric with snow background"
             className="w-full h-auto object-cover rounded-lg"
+            loading="lazy"
           />
-        </div>
-        <div className="w-full flex justify-center">
+        </figure>
+        <div className="w-full flex justify-center" aria-label="Brand trusted since 1990">
           <CurvedTextCircle
             text="TRUSTED BRAND SINCE 1990"
             speed={3}
@@ -62,6 +65,7 @@ const Pictures = () => {
             fontSize={26}
             letterSpacing={10}
             wordSpacing={40}
+            aria-hidden="true" // if decorative
           />
         </div>
       </div>

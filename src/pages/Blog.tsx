@@ -17,7 +17,18 @@ const Blog = () => {
       {/* Blog Grid */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 grid-rows-[285px_1fr] md:h-[600px] gap-6 md:gap-8 mb-28">
         {/* First Card */}
-        <div className="bg-rider bg-cover bg-center rounded-2xl relative row-span-1 md:row-span-2">
+        <div
+          className="bg-rider bg-cover bg-center rounded-2xl relative row-span-1 md:row-span-2"
+          role="img"
+          aria-label="Cyclist riding through a forest trail"
+        >
+          <img
+            src="https://example.com/rider.jpg"
+            alt="Cyclist riding through a forest trail"
+            className="sr-only"
+            aria-hidden="false"
+          />
+
           <div className="absolute top-10 left-10 flex gap-2">
             <button className="text-black font-barlow text-sm uppercase bg-[#bdff6a] rounded-xl px-3">
               Sports
@@ -32,7 +43,18 @@ const Blog = () => {
         </div>
 
         {/* Second Card */}
-        <div className="bg-jumper bg-cover bg-center rounded-2xl relative">
+        <div
+          className="bg-jumper bg-cover bg-center rounded-2xl relative"
+          role="img"
+          aria-label="Runner jumping over rocks in a mountainous terrain"
+        >
+          <img
+            src="https://example.com/jumper.jpg"
+            alt="Runner jumping over rocks in a mountainous terrain"
+            className="sr-only"
+            aria-hidden="false"
+          />
+
           <div className="absolute top-7 left-9 flex gap-2">
             <button className="text-black font-barlow text-sm uppercase bg-[#bdff6a] rounded-xl px-3">
               Sports
@@ -46,10 +68,21 @@ const Blog = () => {
           </div>
         </div>
 
-        {/* Bottom Row with Two Cards (or one column on mobile) */}
+        {/* Bottom Row with Two Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {/* Third Card */}
-          <div className="bg-firstPerson bg-cover bg-center rounded-2xl h-[300px] relative">
+          <div
+            className="bg-firstPerson bg-cover bg-center rounded-2xl h-[300px] relative"
+            role="img"
+            aria-label="Person enjoying outdoor cycling on a trail"
+          >
+            <img
+              src="https://example.com/firstPerson.jpg"
+              alt="Person enjoying outdoor cycling on a trail"
+              className="sr-only"
+              aria-hidden="false"
+            />
+
             <div className="absolute inset-0 bg-black/25 rounded-2xl" />
             <div className="absolute top-7 left-9 flex gap-2">
               <button className="text-black font-barlow text-sm uppercase bg-[#bdff6a] rounded-xl px-3">
@@ -65,7 +98,18 @@ const Blog = () => {
           </div>
 
           {/* Fourth Card */}
-          <div className="bg-secondPerson bg-cover bg-center rounded-2xl h-[300px] relative">
+          <div
+            className="bg-secondPerson bg-cover bg-center rounded-2xl h-[300px] relative"
+            role="img"
+            aria-label="Cyclist biking through scenic nature path"
+          >
+            <img
+              src="https://example.com/secondPerson.jpg"
+              alt="Cyclist biking through scenic nature path"
+              className="sr-only"
+              aria-hidden="false"
+            />
+
             <div className="absolute inset-0 bg-black/25 rounded-2xl" />
             <div className="absolute top-7 left-9 flex gap-2">
               <button className="text-black font-barlow text-sm uppercase bg-[#bdff6a] rounded-xl px-3">
