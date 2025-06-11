@@ -8,21 +8,6 @@
   }
 }
 
-.sale-label::after {
-  content: "30% OFF";
-  position: absolute;
-  bottom: -45px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgba(255, 255, 255, 0.15);
-  font-size: 225px;
-  font-weight: 600;
-  line-height: 1;
-  pointer-events: none;
-  white-space: nowrap;
-  user-select: none;
-  z-index: -1;
-}
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
